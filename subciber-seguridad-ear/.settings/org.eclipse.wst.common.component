@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="subciber-seguridad-ear">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/ear-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/application" tag="defaultRootSource"/>
+        <dependent-module archiveName="commons-lang3-3.3.2.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="xmlbeans-2.6.0.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/org/apache/xmlbeans/xmlbeans/2.6.0/xmlbeans-2.6.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="stax-api-1.0.1.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/stax/stax-api/1.0.1/stax-api-1.0.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="subciber-seguridad-persistence-1.0.jar" deploy-path="/" handle="module:/resource/subciber-seguridad-persistence/subciber-seguridad-persistence">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="subciber-seguridad-entity-1.0.jar" deploy-path="/" handle="module:/resource/subciber-seguridad-entity/subciber-seguridad-entity">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="subciber-seguridad-dao-1.0.jar" deploy-path="/" handle="module:/resource/subciber-seguridad-dao/subciber-seguridad-dao">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="subciber-seguridad-business-1.0.jar" deploy-path="/" handle="module:/resource/subciber-seguridad-business/subciber-seguridad-business">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="subciber-seguridad-shared-1.0.jar" deploy-path="/" handle="module:/resource/subciber-seguridad-shared/subciber-seguridad-shared">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="cdi-properties-1.1.1.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/com/byteslounge/cdi-properties/1.1.1/cdi-properties-1.1.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="jackson-databind-2.5.3.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/com/fasterxml/jackson/core/jackson-databind/2.5.3/jackson-databind-2.5.3.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="jackson-annotations-2.5.0.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/com/fasterxml/jackson/core/jackson-annotations/2.5.0/jackson-annotations-2.5.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="jackson-core-2.5.3.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/com/fasterxml/jackson/core/jackson-core/2.5.3/jackson-core-2.5.3.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="subciber-seguridad-i18n-1.0.jar" deploy-path="/" handle="module:/resource/subciber-seguridad-i18n/subciber-seguridad-i18n">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="subciber-seguridad-rest-1.0.war" deploy-path="/" handle="module:/resource/subciber-seguridad-rest/subciber-seguridad-rest">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
+</project-modules>
