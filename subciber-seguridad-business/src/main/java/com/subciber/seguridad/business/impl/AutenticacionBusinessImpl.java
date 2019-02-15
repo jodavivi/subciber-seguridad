@@ -156,15 +156,22 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
 			//5.Generamos el token con los accesos encripatados
 			StringBuilder sessionId = new StringBuilder();
 			sessionId.append(request.getObjectRequest().getSession());
-			
+			//Estructura Token
+			//sessionId;IdUsuario;usuario,email;fechacreacion;fechaexpiracion;codigodeaccesos
 			StringBuilder accesos = new StringBuilder();
+			accesos.append(usuarioAutenticar.getId());
+			accesos.append(";");
+			accesos.append(usuarioAutenticar.getUsuario());
+			accesos.append(";");
+			accesos.append(usuarioAutenticar.getEmail());
+			accesos.append(";");
 			accesos.append(actual.toString());
 			accesos.append(";");
 			accesos.append(actualSuma.toString());
 			accesos.append(";");
 			accesos.append(accesosList);
 			if(accesosList.length() > 0) {
-				accesos.setLength(accesos.length() - 1);
+				accesos.setLength(accesos.length() - 2);
 			}
 			String tokenEncriptado = EncriptacionAES.encrypt(accesos.toString(), ConstantesConfig.claveEncripacionAES);
 			StringBuilder token = new StringBuilder();
@@ -172,10 +179,8 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
 			token.append(";");
 			token.append(tokenEncriptado);
 			respuesta.getObjectResponse().getUsuario().setTokenUsuario(token.toString());
-			//repositorioJwt.recuperarUsuario(request.getObjectRequest().getSession());
 			respuesta.getAuditResponse().setCodigoRespuesta(messageProvider.codigoExito);
 			respuesta.getAuditResponse().setMensajeRespuesta(messageProvider.mensajeExito);
-			
 		
 		} catch (BusinessException e) {
 			throw new  BusinessException(e.getCodigo(), e.getMensaje());

@@ -32,7 +32,7 @@ import com.subciber.seguridad.util.Utilitario;
  * @version 0.1, 11/02/2019
  * @update
  */
-@Path("/autenticar")
+@Path("/autenticacion")
 public class AutenticacionRestImpl implements AutenticacionRest {
 
 	@Inject
@@ -53,7 +53,7 @@ public class AutenticacionRestImpl implements AutenticacionRest {
 
 	@POST
 	@Path("/")
-	@Produces("application/json")
+	@Produces("application/json")	
 	@Override
 	public Response autenticarUsuario(AutenticacionFiltroDto request) {
 		ResponseGenericDto<InfoUsuarioDto> response = new ResponseGenericDto<InfoUsuarioDto>();
@@ -61,8 +61,9 @@ public class AutenticacionRestImpl implements AutenticacionRest {
 		String session = "";
 		try {
 			session = httpServletRequest.getSession().getId();
-			RequestGenericDto<AutenticacionFiltroDto> requestGenerarico = utilitario.generateRequest(request,
+			RequestGenericDto<AutenticacionFiltroDto> requestGenerarico = utilitario.generateRequestAunteticar(request,
 					httpHeaders, uriInfo);
+			response.getAuditResponse().setTransaccionId(requestGenerarico.getAuditRequest().getTransaccionId());
 			//1. Validamos la autenticacion del usuario
 			requestGenerarico.getObjectRequest().setSession(session);
 			ResponseGenericDto<InfoUsuarioDto> usuario = autenticacionBusiness.autenticarUsuario(requestGenerarico);
@@ -81,9 +82,7 @@ public class AutenticacionRestImpl implements AutenticacionRest {
 			response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoErrorIdt3);
 			response.getAuditResponse().setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt3,
 					clase, metodo, e.getStackTrace()[0].getLineNumber(), e.getMessage()));
-		} finally {
-			response.getAuditResponse().setTransaccionId(httpHeaders.getHeaderString("transaccionId"));
-		}
+		}  
 
 		return Response.status(200).header("sToken", session).entity(response).build();
 	}

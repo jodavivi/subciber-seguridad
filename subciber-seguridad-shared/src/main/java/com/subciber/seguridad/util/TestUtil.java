@@ -39,6 +39,13 @@ public class TestUtil {
 	    sb.setLength(cadena.length() - 1);
 	    System.out.println(sb.toString());
 	    
+	    
+	    LocalDateTime a = LocalDateTime.parse("2019-02-15T13:02:13.298");
+	    LocalDateTime b =  LocalDateTime.parse("2019-04-15T12:44:15.477");
+	    System.out.println(a.compareTo(b));
+	    System.out.println(b.compareTo(a));
+	    System.out.println(a.compareTo(a));
+	    
 	}
 
 }
