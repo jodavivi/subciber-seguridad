@@ -6,6 +6,7 @@ package com.subciber.seguridad.business.impl;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.Dependent;
@@ -16,9 +17,12 @@ import com.subciber.seguridad.base.dto.ResponseGenericDto;
 import com.subciber.seguridad.business.api.UsuarioBusiness;
 import com.subciber.seguridad.business.dto.UsuarioDetalleDto;
 import com.subciber.seguridad.business.util.ConfigBusiness;
+import com.subciber.seguridad.dao.api.UsuarioRxDao;
 import com.subciber.seguridad.dao.api.UsuarioTxDao;
 import com.subciber.seguridad.dao.util.ConfigDao;
+import com.subciber.seguridad.dto.UsuarioFiltroDto;
 import com.subciber.seguridad.entity.Usuario;
+import com.subciber.seguridad.entity.VUsuario;
 import com.subciber.seguridad.exception.BusinessException;
 import com.subciber.seguridad.exception.DaoException;
 import com.subciber.seguridad.property.MessageProvider;
@@ -42,6 +46,9 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 	private Utilitario utilitario;
 	@EJB
 	private UsuarioTxDao usuarioDao;
+	@EJB
+	private UsuarioRxDao usuarioRxDao;
+	
 	String clase = Thread.currentThread().getStackTrace()[1].getClassName();
 	String metodo = null;
 	/**
@@ -55,6 +62,18 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 		try {
 			metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
 			response = new ResponseGenericDto<>();
+			
+			
+			//1. Verificamos si existe el usuario registrado
+			UsuarioFiltroDto requestConsultarUsuario = new UsuarioFiltroDto(); 
+			requestConsultarUsuario.setEstadoId(ConstantesConfig.activo);
+			requestConsultarUsuario.setUsuario(request.getObjectRequest().getUsuario());
+			List<VUsuario>  responseconsultarUsuario = usuarioRxDao.consultarUsuario(requestConsultarUsuario);
+			
+			if(responseconsultarUsuario != null && responseconsultarUsuario.size() > 0) {
+				throw new  DaoException(messageProvider.codigoErrorIdf6, messageProvider.mensajeErrorIdf6);
+			}
+			//2. Si no existe- creamos el usuario
 			Usuario usuario = new Usuario();
 			Integer idUsuario = usuarioDao.obtenerId(ConfigDao.sequeciaTablaUsuario);
 			usuario.setEstadoId(ConstantesConfig.activo);
@@ -65,7 +84,7 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 			usuario.setCodigo(ConfigBusiness.caracterUsuario + codigoUsuario.substring(3));
 			usuario.setUsuario(request.getObjectRequest().getUsuario());
 			usuario.setClave(request.getObjectRequest().getClave());
-			usuario.setEmail(request.getObjectRequest().getEmailUsuario());
+			usuario.setEmail(request.getObjectRequest().getUsuario());
 			usuario.setImagen(request.getObjectRequest().getImagenUsuario());
 			usuario.setAplicacionId(ConstantesConfig.aplicacionId);
 			Usuario responseCrear = usuarioDao.crear(usuario);
@@ -73,9 +92,9 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 			UsuarioDetalleDto usuarioDto = new UsuarioDetalleDto();
 			usuarioDto.setApellido(responseCrear.getUsuario());
 			usuarioDto.setUsuarioId(responseCrear.getId());
-			response.getAuditResponse().setCodigoRespuesta(1);
-			response.getAuditResponse().setMensajeRespuesta("OK");
-			response.getAuditResponse().setTransaccionId("123123123123");
+			response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoExito);
+			response.getAuditResponse().setMensajeRespuesta(messageProvider.mensajeExito);
+			response.getAuditResponse().setTransaccionId(request.getAuditRequest().getTransaccionId());
 			response.setObjectResponse(usuarioDto);
 		} catch (DaoException e) {
 			throw new  BusinessException(e.getCodigo(), e.getMensaje());

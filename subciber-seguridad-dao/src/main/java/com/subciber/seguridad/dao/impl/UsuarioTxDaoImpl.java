@@ -6,7 +6,6 @@ package com.subciber.seguridad.dao.impl;
 import java.io.Serializable;
 
 import javax.ejb.Stateless;
-import javax.enterprise.context.Dependent;
 
 import com.subciber.seguridad.dao.api.UsuarioTxDao;
 import com.subciber.seguridad.dao.base.GenericaJPADaoImpl;

@@ -158,7 +158,7 @@ public class Utilitario {
 		return result;
 	}
 
-	public static boolean isNullOrEmpty(String str) {
+	public boolean isNullOrEmpty(String str) {
 		 boolean ok = true;
 		 try {
 	        if(str != null && !str.trim().isEmpty())
