@@ -30,6 +30,7 @@ import com.subciber.seguridad.entity.VAccesoComponente;
 import com.subciber.seguridad.entity.VAccesoGrupoAplicacion;
 import com.subciber.seguridad.entity.VUsuario;
 import com.subciber.seguridad.exception.BusinessException;
+import com.subciber.seguridad.exception.DaoException;
 import com.subciber.seguridad.property.MessageProvider;
 import com.subciber.seguridad.util.ConstantesConfig;
 import com.subciber.seguridad.util.EncriptacionAES;
@@ -182,7 +183,7 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
 			respuesta.getAuditResponse().setCodigoRespuesta(messageProvider.codigoExito);
 			respuesta.getAuditResponse().setMensajeRespuesta(messageProvider.mensajeExito);
 		
-		} catch (BusinessException e) {
+		} catch (DaoException e) {
 			throw new  BusinessException(e.getCodigo(), e.getMensaje());
 		} catch(Exception e) {
 			throw new  BusinessException(messageProvider.codigoErrorIdt2, MessageFormat.format(messageProvider.mensajeErrorIdt2, clase, metodo, e.getStackTrace()[0].getLineNumber(),  e.getMessage()));

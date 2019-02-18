@@ -3,10 +3,14 @@
  */
 package com.subciber.seguridad.dao.base;
 
+import java.math.BigInteger;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 
-import javax.enterprise.context.Dependent;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 
 import com.subciber.seguridad.exception.DaoException;
 import com.subciber.seguridad.property.MessageProvider;
@@ -16,7 +20,7 @@ import com.subciber.seguridad.property.MessageProvider;
  * @param <T>
  *
  */
-@Dependent
+@Stateless
 public abstract  class GenericaJPADaoImpl<T> extends BaseJPADao<T>  implements GenericaJPADao<T> {
 
 	private static final long serialVersionUID = 1L;
@@ -26,16 +30,47 @@ public abstract  class GenericaJPADaoImpl<T> extends BaseJPADao<T>  implements G
 	@Inject
     private MessageProvider messageProvider;
 	
-	public T get(int id) throws DaoException {
-		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
-		T o = null;
+	/**
+	 * {@inheritDoc}
+	 */
+	public Integer obtenerId(String sqlSecuencia) throws DaoException{
+
+		Integer response  = null;
 		try {
-			o = (T) entityManager.find(entityClass, id);
-			
+			metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+			Query q = entityManager.createNativeQuery(sqlSecuencia);
+			BigInteger result=(BigInteger)q.getSingleResult();   
+			response = result.intValue();
 		}catch(Exception e) {
 			throw new DaoException(messageProvider.codigoErrorIdt1, MessageFormat.format(messageProvider.mensajeErrorIdt1, clase, metodo, e.getStackTrace()[0].getLineNumber(), tableName, e.getMessage()));
 		}
-	     return o; 
+		
+		return response;
 	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public T crear(T request) throws DaoException {
+		try {
+			metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+			entityManager.persist(request);
+			entityManager.flush();
+		}catch(PersistenceException e) {
+			  Throwable th = e.getCause();
+				  if(th.getCause() instanceof SQLException) {
+					  SQLException cause = (SQLException) th.getCause();
+					 // String estado = cause.getSQLState();
+					  //if(estado.equalsIgnoreCase("23505")) {
+					  //}
+					  throw new DaoException(messageProvider.codigoErrorIdt1, MessageFormat.format(messageProvider.mensajeErrorIdt1, clase, metodo, e.getStackTrace()[0].getLineNumber(), tableName, cause.getMessage()));
+				  }
+			 
+		}catch(Exception e) {
+			throw new DaoException(messageProvider.codigoErrorIdt1, MessageFormat.format(messageProvider.mensajeErrorIdt1, clase, metodo, e.getStackTrace()[0].getLineNumber(), tableName, e.getMessage()));
+		}
+		
+		return request;
+	}
 }

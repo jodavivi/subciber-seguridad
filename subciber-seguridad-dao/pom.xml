@@ -1,12 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.subciber.seguridad</groupId>
-    <artifactId>subciber-seguridad</artifactId>
-    <version>1.0</version>
-  </parent>
-  <artifactId>subciber-seguridad-dao</artifactId>
-  <dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.subciber.seguridad</groupId>
+		<artifactId>subciber-seguridad</artifactId>
+		<version>1.0</version>
+	</parent>
+	<artifactId>subciber-seguridad-dao</artifactId>
+	<dependencies>
 		<!-- API Java EE -->
 		<dependency>
 			<groupId>javax</groupId>
@@ -21,6 +23,10 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
 		</dependency>
 		<!-- Utilities -->
 		<dependency>

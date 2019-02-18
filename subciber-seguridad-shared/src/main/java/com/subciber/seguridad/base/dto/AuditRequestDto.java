@@ -16,6 +16,7 @@ public class AuditRequestDto implements Serializable{
 	private String aplicacion;
 	private Integer usuarioId;
 	private String usuario;
+	private String session;
 	private String terminal;
 	
 	
@@ -49,10 +50,15 @@ public class AuditRequestDto implements Serializable{
 	public void setTerminal(String terminal) {
 		this.terminal = terminal;
 	}
+	public String getSession() {
+		return session;
+	}
+	public void setSession(String session) {
+		this.session = session;
+	}
 	@Override
 	public String toString() {
 		return "AuditRequestDto [transaccionId=" + transaccionId + ", aplicacion=" + aplicacion + ", usuarioId="
-				+ usuarioId + ", usuario=" + usuario + ", terminal=" + terminal + "]";
+				+ usuarioId + ", usuario=" + usuario + ", session=" + session + ", terminal=" + terminal + "]";
 	}
-	
 }

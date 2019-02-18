@@ -46,6 +46,15 @@ public class TestUtil {
 	    System.out.println(b.compareTo(a));
 	    System.out.println(a.compareTo(a));
 	    
+	    String saludo ="000001";
+	    System.out.println(saludo.substring(3));
+	    
+	    String estado = "23505";
+	    
+	    if(estado.equals("23505")) {
+	    	System.out.println("Int¿resaaa");
+	    }
+	    
 	}
 
 }

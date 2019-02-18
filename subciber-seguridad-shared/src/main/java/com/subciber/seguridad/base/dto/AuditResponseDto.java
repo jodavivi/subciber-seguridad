@@ -35,5 +35,4 @@ public class AuditResponseDto implements Serializable{
 	public void setMensajeRespuesta(String mensajeRespuesta) {
 		this.mensajeRespuesta = mensajeRespuesta;
 	}
-	
 }

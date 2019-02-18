@@ -50,7 +50,7 @@ public class Utilitario {
 		return jsonStr;
 	}
 
-	public <T> RequestGenericDto<T> generateRequest(T object, HttpHeaders httpHeaders, UriInfo uriInfo)
+	public <T> RequestGenericDto<T> generateRequestAunteticar(T object, HttpHeaders httpHeaders, UriInfo uriInfo)
 			throws GeneralException {
 		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
 		RequestGenericDto<T> response = null;
@@ -84,7 +84,7 @@ public class Utilitario {
 		return response;
 	}
 
-	public <T> RequestGenericDto<T> generateRequestAunteticar(T object, HttpHeaders httpHeaders, UriInfo uriInfo)
+	public <T> RequestGenericDto<T> generateRequest(T object, HttpHeaders httpHeaders, UriInfo uriInfo)
 			throws GeneralException {
 		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
 		RequestGenericDto<T> response = null;
@@ -112,6 +112,7 @@ public class Utilitario {
 			 response.getAuditRequest().setTransaccionId(httpHeaders.getHeaderString("transaccionId"));
 			 response.getAuditRequest().setUsuario(responseToken.getUsuario());
 			 response.getAuditRequest().setUsuarioId(Integer.parseInt(responseToken.getUsuarioId()));
+			 response.getAuditRequest().setSession(tokenSession);
 			 response.setObjectRequest(object);
 
 		} catch (Exception e) {

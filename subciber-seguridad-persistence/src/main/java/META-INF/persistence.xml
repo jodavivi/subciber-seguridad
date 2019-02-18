@@ -7,6 +7,7 @@
 		<jta-data-source>java:jboss/datasources/MercadeoDS</jta-data-source>
 		<jar-file>subciber-seguridad-entity-1.0.jar</jar-file>
 		<properties>
+			<property name="hibernate.connection.autocommit" value="true" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
 			<property name="hibernate.max_fetch_depth" value="3" />
 			<property name="hibernate.show_sql" value="true" />
