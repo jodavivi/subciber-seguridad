@@ -10,7 +10,7 @@ import com.subciber.seguridad.exception.DaoException;
  * @version 0.1, 11/02/2019
  * @update
  */
-public interface AutenticacionDao {
+public interface AutenticacionRxDao {
 	
 	/**
 	 * @param metodo para la autenticacion de usuarios

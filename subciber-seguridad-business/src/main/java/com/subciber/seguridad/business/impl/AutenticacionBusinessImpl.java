@@ -19,9 +19,9 @@ import com.subciber.seguridad.business.api.RepositorioJwt;
 import com.subciber.seguridad.business.dto.AccesosDto;
 import com.subciber.seguridad.business.dto.InfoJwt;
 import com.subciber.seguridad.business.dto.InfoUsuarioDto;
-import com.subciber.seguridad.dao.api.AccesosRecursosUsuarioDao;
-import com.subciber.seguridad.dao.api.AccesosUsuarioDao;
-import com.subciber.seguridad.dao.api.AutenticacionDao;
+import com.subciber.seguridad.dao.api.AccesosRecursosUsuarioRxDao;
+import com.subciber.seguridad.dao.api.AccesosUsuarioRxDao;
+import com.subciber.seguridad.dao.api.AutenticacionRxDao;
 import com.subciber.seguridad.dto.AccesoFiltroDto;
 import com.subciber.seguridad.dto.AutenticacionFiltroDto;
 import com.subciber.seguridad.dto.UsuarioAplicacionDto;
@@ -48,11 +48,11 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
 	@Inject
     private MessageProvider messageProvider;
 	@Inject
-    private AutenticacionDao autenticacionDao;
+    private AutenticacionRxDao autenticacionDao;
 	@Inject
-	private AccesosUsuarioDao accesosUsuarioDao;
+	private AccesosUsuarioRxDao accesosUsuarioDao;
 	@Inject
-	private AccesosRecursosUsuarioDao accesosRecursosUsuarioDao;
+	private AccesosRecursosUsuarioRxDao accesosRecursosUsuarioDao;
 	@Inject
 	private Utilitario utilitario;
 	@Inject

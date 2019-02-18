@@ -15,6 +15,6 @@ import com.subciber.seguridad.entity.Usuario;
  * @update
  */
 @Local
-public interface UsuarioDao extends GenericaJPADao<Usuario>{
+public interface UsuarioTxDao extends GenericaJPADao<Usuario>{
 
 }

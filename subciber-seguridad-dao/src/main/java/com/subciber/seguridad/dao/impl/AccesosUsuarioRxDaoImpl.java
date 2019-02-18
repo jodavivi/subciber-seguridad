@@ -12,10 +12,10 @@ import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
-import com.subciber.seguridad.dao.api.AccesosRecursosUsuarioDao;
+import com.subciber.seguridad.dao.api.AccesosUsuarioRxDao;
 import com.subciber.seguridad.dao.base.BaseJPADao;
 import com.subciber.seguridad.dto.AccesoFiltroDto;
-import com.subciber.seguridad.entity.VAccesoComponente;
+import com.subciber.seguridad.entity.VAccesoGrupoAplicacion;
 import com.subciber.seguridad.exception.DaoException;
 import com.subciber.seguridad.property.MessageProvider;
 
@@ -26,7 +26,7 @@ import com.subciber.seguridad.property.MessageProvider;
  * 
  */
 @Dependent
-public class AccesoRecursoUsuarioDaoImpl extends BaseJPADao<VAccesoComponente> implements AccesosRecursosUsuarioDao, Serializable {
+public class AccesosUsuarioRxDaoImpl extends BaseJPADao<VAccesoGrupoAplicacion> implements AccesosUsuarioRxDao, Serializable {
 
 	@Inject
     private MessageProvider messageProvider;
@@ -39,14 +39,14 @@ public class AccesoRecursoUsuarioDaoImpl extends BaseJPADao<VAccesoComponente> i
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<VAccesoComponente> accesosRecursosUsuario(AccesoFiltroDto request) throws DaoException {
+	public List<VAccesoGrupoAplicacion> accesosGrupoAplicacionesUsuario(AccesoFiltroDto request) throws DaoException {
 
 		StringBuilder jpql = null;
 		StringBuilder jpqlSelect = null;
 		StringBuilder jpqlWhere = null;
 		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
-		TypedQuery<VAccesoComponente> query = null;
-		List<VAccesoComponente> resultado = null;
+		TypedQuery<VAccesoGrupoAplicacion> query = null;
+		List<VAccesoGrupoAplicacion> resultado = null;
 		try {
 			jpqlSelect = new StringBuilder();
 			jpqlSelect.append("SELECT ");
@@ -62,7 +62,7 @@ public class AccesoRecursoUsuarioDaoImpl extends BaseJPADao<VAccesoComponente> i
 			jpql = new StringBuilder();
 			jpql.append(jpqlSelect);
 			jpql.append(jpqlWhere);
-			query = entityManager.createQuery(jpql.toString(), VAccesoComponente.class);
+			query = entityManager.createQuery(jpql.toString(), VAccesoGrupoAplicacion.class);
 			query.setParameter("usuarioId", request.getUsuarioId());
 			
 			resultado = query.getResultList();

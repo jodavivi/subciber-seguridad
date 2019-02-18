@@ -16,7 +16,7 @@ import com.subciber.seguridad.base.dto.ResponseGenericDto;
 import com.subciber.seguridad.business.api.UsuarioBusiness;
 import com.subciber.seguridad.business.dto.UsuarioDetalleDto;
 import com.subciber.seguridad.business.util.ConfigBusiness;
-import com.subciber.seguridad.dao.api.UsuarioDao;
+import com.subciber.seguridad.dao.api.UsuarioTxDao;
 import com.subciber.seguridad.dao.util.ConfigDao;
 import com.subciber.seguridad.entity.Usuario;
 import com.subciber.seguridad.exception.BusinessException;
@@ -41,7 +41,7 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 	@Inject
 	private Utilitario utilitario;
 	@EJB
-	private UsuarioDao usuarioDao;
+	private UsuarioTxDao usuarioDao;
 	String clase = Thread.currentThread().getStackTrace()[1].getClassName();
 	String metodo = null;
 	/**

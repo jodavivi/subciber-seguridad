@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
-import com.subciber.seguridad.dao.api.AutenticacionDao;
+import com.subciber.seguridad.dao.api.AutenticacionRxDao;
 import com.subciber.seguridad.dao.base.BaseJPADao;
 import com.subciber.seguridad.dto.AutenticacionFiltroDto;
 import com.subciber.seguridad.entity.VUsuario;
@@ -25,7 +25,7 @@ import com.subciber.seguridad.property.MessageProvider;
  * @update
  */
 @Dependent
-public class AutenticacionDaoImpl extends BaseJPADao<VUsuario> implements AutenticacionDao, Serializable {
+public class AutenticacionRxDaoImpl extends BaseJPADao<VUsuario> implements AutenticacionRxDao, Serializable {
 
 	@Inject
     private MessageProvider messageProvider;
