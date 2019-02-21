@@ -3,7 +3,10 @@
  */
 package com.subciber.seguridad.business.impl;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,11 +15,14 @@ import javax.ejb.EJB;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import com.subciber.seguridad.base.dto.AuditResponseDto;
 import com.subciber.seguridad.base.dto.RequestGenericDto;
 import com.subciber.seguridad.base.dto.ResponseGenericDto;
 import com.subciber.seguridad.business.api.UsuarioBusiness;
 import com.subciber.seguridad.business.dto.UsuarioDetalleDto;
 import com.subciber.seguridad.business.util.ConfigBusiness;
+import com.subciber.seguridad.client.api.EmailClient;
+import com.subciber.seguridad.client.dto.EmailRequestClientDto;
 import com.subciber.seguridad.dao.api.UsuarioRxDao;
 import com.subciber.seguridad.dao.api.UsuarioTxDao;
 import com.subciber.seguridad.dao.util.ConfigDao;
@@ -27,6 +33,7 @@ import com.subciber.seguridad.exception.BusinessException;
 import com.subciber.seguridad.exception.DaoException;
 import com.subciber.seguridad.property.MessageProvider;
 import com.subciber.seguridad.util.ConstantesConfig;
+import com.subciber.seguridad.util.SendHtmlEmail;
 import com.subciber.seguridad.util.Utilitario;
 
 /**
@@ -48,6 +55,8 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 	private UsuarioTxDao usuarioDao;
 	@EJB
 	private UsuarioRxDao usuarioRxDao;
+	@Inject
+	private EmailClient emailClient;
 	
 	String clase = Thread.currentThread().getStackTrace()[1].getClassName();
 	String metodo = null;
@@ -74,6 +83,9 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 				throw new  DaoException(messageProvider.codigoErrorIdf6, messageProvider.mensajeErrorIdf6);
 			}
 			//2. Si no existe- creamos el usuario
+			
+			String claveNueva = utilitario.encriptarString(utilitario.generarString());
+			
 			Usuario usuario = new Usuario();
 			Integer idUsuario = usuarioDao.obtenerId(ConfigDao.sequeciaTablaUsuario);
 			usuario.setEstadoId(ConstantesConfig.activo);
@@ -83,19 +95,41 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 			String codigoUsuario = ConfigBusiness.codigoUsuario + idUsuario;
 			usuario.setCodigo(ConfigBusiness.caracterUsuario + codigoUsuario.substring(3));
 			usuario.setUsuario(request.getObjectRequest().getUsuario());
-			usuario.setClave(request.getObjectRequest().getClave());
-			usuario.setEmail(request.getObjectRequest().getUsuario());
+			usuario.setClave(claveNueva);
+			usuario.setEmail(request.getObjectRequest().getEmailUsuario());
 			usuario.setImagen(request.getObjectRequest().getImagenUsuario());
 			usuario.setAplicacionId(ConstantesConfig.aplicacionId);
 			Usuario responseCrear = usuarioDao.crear(usuario);
-			
 			UsuarioDetalleDto usuarioDto = new UsuarioDetalleDto();
 			usuarioDto.setApellido(responseCrear.getUsuario());
 			usuarioDto.setUsuarioId(responseCrear.getId());
-			response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoExito);
-			response.getAuditResponse().setMensajeRespuesta(messageProvider.mensajeExito);
-			response.getAuditResponse().setTransaccionId(request.getAuditRequest().getTransaccionId());
-			response.setObjectResponse(usuarioDto);
+			
+			//3. Enviamos el correo de creacion de usuario
+			RequestGenericDto<EmailRequestClientDto> requestEnvioCorreo = new RequestGenericDto<>();
+			requestEnvioCorreo.getAuditRequest().setTransaccionId(request.getAuditRequest().getTransaccionId());
+			requestEnvioCorreo.getAuditRequest().setAplicacion(request.getAuditRequest().getAplicacion());
+			requestEnvioCorreo.getAuditRequest().setTerminal(request.getAuditRequest().getTerminal());
+			requestEnvioCorreo.getAuditRequest().setUsuario(request.getAuditRequest().getUsuario());
+			requestEnvioCorreo.getAuditRequest().setSession(request.getAuditRequest().getSession());
+			
+			EmailRequestClientDto emailRequest = new EmailRequestClientDto();
+			emailRequest.setCorreoDestino(request.getObjectRequest().getEmailUsuario());
+			emailRequest.setAsunto("Registro de Usuario");
+			String		html	= fileToString(SendHtmlEmail.class.getResourceAsStream("/plantilla/CrearUsuario.html"), "utf-8");
+			emailRequest.setCuerpo(html.replace("{0}", request.getObjectRequest().getUsuario()).replace("{1}", claveNueva));
+			requestEnvioCorreo.setObjectRequest(emailRequest);
+			AuditResponseDto responseEnviarCorreo = emailClient.enviarCorreo(requestEnvioCorreo);
+			if(responseEnviarCorreo.getCodigoRespuesta() ==  messageProvider.codigoExito) {
+				response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoExito);
+				response.getAuditResponse().setMensajeRespuesta(messageProvider.mensajeExito);
+				response.getAuditResponse().setTransaccionId(request.getAuditRequest().getTransaccionId());
+				response.setObjectResponse(usuarioDto);
+			} else {
+				response.getAuditResponse().setCodigoRespuesta(responseEnviarCorreo.getCodigoRespuesta());
+				response.getAuditResponse().setMensajeRespuesta(responseEnviarCorreo.getMensajeRespuesta());
+				response.getAuditResponse().setTransaccionId(request.getAuditRequest().getTransaccionId());
+			}
+	
 		} catch (DaoException e) {
 			throw new  BusinessException(e.getCodigo(), e.getMensaje());
 		} catch (Exception e) {
@@ -105,4 +139,15 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 		return response;
 	}
 
+	private String fileToString(InputStream input, String encoding) throws Exception {
+		StringWriter	  sw = new StringWriter();
+		InputStreamReader in = new InputStreamReader(input, encoding);
+ 
+		char[]	buffer = new char[1024 * 2];
+		int		n	   = 0;
+		while (-1 != (n = in.read(buffer))) {
+			sw.write(buffer, 0, n);
+		}    		
+		return sw.toString();
+	}	 
 }

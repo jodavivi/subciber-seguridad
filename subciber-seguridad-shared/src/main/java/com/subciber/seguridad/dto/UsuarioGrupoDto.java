@@ -16,7 +16,7 @@ import java.util.List;
 public class UsuarioGrupoDto implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	private String codigoGrupo;
+	private Integer codigoGrupo;
 	private String nombreGrupo;
 	private List<UsuarioAplicacionDto> aplicaciones;
 	
@@ -25,10 +25,10 @@ public class UsuarioGrupoDto implements Serializable{
 		aplicaciones = new ArrayList<>();
 	}
 	
-	public String getCodigoGrupo() {
+	public Integer getCodigoGrupo() {
 		return codigoGrupo;
 	}
-	public void setCodigoGrupo(String codigoGrupo) {
+	public void setCodigoGrupo(Integer codigoGrupo) {
 		this.codigoGrupo = codigoGrupo;
 	}
 	public String getNombreGrupo() {

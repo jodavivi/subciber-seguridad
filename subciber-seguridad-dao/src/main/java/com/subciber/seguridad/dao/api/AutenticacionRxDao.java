@@ -1,7 +1,9 @@
 package com.subciber.seguridad.dao.api;
 
+import javax.ejb.Local;
+
 import com.subciber.seguridad.dto.AutenticacionFiltroDto;
-import com.subciber.seguridad.entity.VUsuario;
+import com.subciber.seguridad.entity.VUsuarioAutenticacion;
 import com.subciber.seguridad.exception.DaoException;
 
 /**
@@ -10,6 +12,7 @@ import com.subciber.seguridad.exception.DaoException;
  * @version 0.1, 11/02/2019
  * @update
  */
+@Local
 public interface AutenticacionRxDao {
 	
 	/**
@@ -17,6 +20,6 @@ public interface AutenticacionRxDao {
 	 * @return devuelve informacion del usuario
 	 * @throws DaoException
 	 */
-	public abstract VUsuario autenticar(AutenticacionFiltroDto request) throws DaoException;
+	public abstract VUsuarioAutenticacion autenticar(AutenticacionFiltroDto request) throws DaoException;
 
 }

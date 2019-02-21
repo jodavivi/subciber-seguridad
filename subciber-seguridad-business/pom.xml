@@ -22,6 +22,11 @@
 			<artifactId>xmlbeans</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+			<version>1.5</version>
+		</dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
@@ -44,6 +49,10 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>subciber-seguridad-entity</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>subciber-seguridad-client</artifactId>
 		</dependency>
 	</dependencies>
 </project>

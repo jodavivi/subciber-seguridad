@@ -2,6 +2,8 @@ package com.subciber.seguridad.dao.api;
 
 import java.util.List;
 
+import javax.ejb.Local;
+
 import com.subciber.seguridad.dto.AccesoFiltroDto;
 import com.subciber.seguridad.entity.VAccesoGrupoAplicacion;
 import com.subciber.seguridad.exception.DaoException;
@@ -12,6 +14,7 @@ import com.subciber.seguridad.exception.DaoException;
  * @version 0.1, 11/02/2019
  * @update
  */
+@Local
 public interface AccesosUsuarioRxDao {
 	
 	/**

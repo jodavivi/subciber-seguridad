@@ -22,9 +22,24 @@ public class VAccesoComponente implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="\"Id\"")
-	private Integer id;
+	@Column(name="\"IdCorrelativo\"")
+	private Integer idCorrelativo;
+
+	@Column(name="\"UsuarioId\"")
+	private Integer usuarioId;
 	
+	@Column(name="\"CodigoUsuario\"")
+	private String codigoUsuario;
+	
+	@Column(name="\"ComponenteId\"")
+	private Integer componenteId;
+
+	@Column(name="\"AplicacionId\"")
+	private Integer aplicacionId;
+
+	@Column(name="\"TipoComponenteId\"")
+	private String tipoComponenteId;
+
 	@Column(name="\"CodigoComponente\"")
 	private String codigoComponente;
 
@@ -36,21 +51,66 @@ public class VAccesoComponente implements Serializable {
 
 	@Column(name="\"Nivel\"")
 	private String nivel;
-
+	
+	@Column(name="\"PadreId\"")
+	private Integer padreId;
+	
 	@Column(name="\"Url\"")
 	private String url;
-
-	@Column(name="\"UsuarioId\"")
-	private Integer usuarioId;
-
-	@Column(name="\"Icono\"")
-	private String icono;
 	
 	public VAccesoComponente() {
 	}
 
+	public Integer getIdCorrelativo() {
+		return idCorrelativo;
+	}
+
+	public void setIdCorrelativo(Integer idCorrelativo) {
+		this.idCorrelativo = idCorrelativo;
+	}
+
+	public Integer getUsuarioId() {
+		return usuarioId;
+	}
+
+	public void setUsuarioId(Integer usuarioId) {
+		this.usuarioId = usuarioId;
+	}
+
+	public String getCodigoUsuario() {
+		return codigoUsuario;
+	}
+
+	public void setCodigoUsuario(String codigoUsuario) {
+		this.codigoUsuario = codigoUsuario;
+	}
+
+	public Integer getComponenteId() {
+		return componenteId;
+	}
+
+	public void setComponenteId(Integer componenteId) {
+		this.componenteId = componenteId;
+	}
+
+	public Integer getAplicacionId() {
+		return aplicacionId;
+	}
+
+	public void setAplicacionId(Integer aplicacionId) {
+		this.aplicacionId = aplicacionId;
+	}
+
+	public String getTipoComponenteId() {
+		return tipoComponenteId;
+	}
+
+	public void setTipoComponenteId(String tipoComponenteId) {
+		this.tipoComponenteId = tipoComponenteId;
+	}
+
 	public String getCodigoComponente() {
-		return this.codigoComponente;
+		return codigoComponente;
 	}
 
 	public void setCodigoComponente(String codigoComponente) {
@@ -58,7 +118,7 @@ public class VAccesoComponente implements Serializable {
 	}
 
 	public String getCodigoEncriptado() {
-		return this.codigoEncriptado;
+		return codigoEncriptado;
 	}
 
 	public void setCodigoEncriptado(String codigoEncriptado) {
@@ -66,51 +126,35 @@ public class VAccesoComponente implements Serializable {
 	}
 
 	public String getDescripcion() {
-		return this.descripcion;
+		return descripcion;
 	}
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
 
-	public Integer getId() {
-		return this.id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	public String getNivel() {
-		return this.nivel;
+		return nivel;
 	}
 
 	public void setNivel(String nivel) {
 		this.nivel = nivel;
 	}
 
+	public Integer getPadreId() {
+		return padreId;
+	}
+
+	public void setPadreId(Integer padreId) {
+		this.padreId = padreId;
+	}
+
 	public String getUrl() {
-		return this.url;
+		return url;
 	}
 
 	public void setUrl(String url) {
 		this.url = url;
 	}
 
-	public Integer getUsuarioId() {
-		return this.usuarioId;
-	}
-
-	public void setUsuarioId(Integer usuarioId) {
-		this.usuarioId = usuarioId;
-	}
-
-	public String getIcono() {
-		return icono;
-	}
-
-	public void setIcono(String icono) {
-		this.icono = icono;
-	}
-	
 }

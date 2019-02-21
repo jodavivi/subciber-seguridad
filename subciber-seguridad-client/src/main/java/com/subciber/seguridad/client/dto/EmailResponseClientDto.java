@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.subciber.seguridad.base.dto;
+package com.subciber.seguridad.client.dto;
 
 import java.io.Serializable;
 
@@ -9,14 +9,13 @@ import java.io.Serializable;
  * @author josep
  *
  */
-public class AuditResponseDto implements Serializable{
+public class EmailResponseClientDto implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private String transaccionId;
 	private Integer codigoRespuesta;
 	private String mensajeRespuesta;
-	
 	public String getTransaccionId() {
 		return transaccionId;
 	}
@@ -37,7 +36,8 @@ public class AuditResponseDto implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "AuditResponseDto [transaccionId=" + transaccionId + ", codigoRespuesta=" + codigoRespuesta
+		return "EmailResponseClientDto [transaccionId=" + transaccionId + ", codigoRespuesta=" + codigoRespuesta
 				+ ", mensajeRespuesta=" + mensajeRespuesta + "]";
 	}
+	
 }

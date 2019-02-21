@@ -4,6 +4,7 @@
 package com.subciber.seguridad.util;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 
 /**
  * @author josep
@@ -18,7 +19,7 @@ public class TestUtil {
 		
 		final String secretKey = "Peru12345678.";
 	     
-	    String originalString = "APP0001";
+	    String originalString = "Peru123456.";
 	    String encryptedString = EncriptacionAES.encrypt(originalString, secretKey) ;
 	    String decryptedString = EncriptacionAES.decrypt(encryptedString, secretKey) ;
 	     
@@ -54,6 +55,20 @@ public class TestUtil {
 	    if(estado.equals("23505")) {
 	    	System.out.println("Int¿resaaa");
 	    }
+	    
+	    
+	    String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 10) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+        
+        
+        System.out.println(saltStr);
+        
 	    
 	}
 

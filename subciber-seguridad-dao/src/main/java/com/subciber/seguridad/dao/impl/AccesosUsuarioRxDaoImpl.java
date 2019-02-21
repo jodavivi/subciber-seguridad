@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.List;
 
-import javax.enterprise.context.Dependent;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
@@ -25,7 +25,7 @@ import com.subciber.seguridad.property.MessageProvider;
  * @Update
  * 
  */
-@Dependent
+@Stateless
 public class AccesosUsuarioRxDaoImpl extends BaseJPADao<VAccesoGrupoAplicacion> implements AccesosUsuarioRxDao, Serializable {
 
 	@Inject

@@ -20,139 +20,183 @@ public class VAccesoGrupoAplicacion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="\"Id\"")
-	private Integer id;
+	@Column(name="\"IdCorrelativo\"")
+	private Integer idCorrelativo;
 	
-	@Column(name="\"Aplicacion\"")
-	private String aplicacion;
-
-	@Column(name="\"CodigoAplicacion\"")
-	private String codigoAplicacion;
-
-	@Column(name="\"ComponenteId\"")
-	private Integer componenteId;
-
-	@Column(name="\"DescripcionAplicacion\"")
-	private String descripcionAplicacion;
-
-	@Column(name="\"Grupo\"")
-	private String grupo;
-
-	@Column(name="\"GrupoDescripcion\"")
-	private String grupoDescripcion;
-
+	@Column(name="\"UsuarioId\"")
+	private Integer usuarioId;
+	
+	@Column(name="\"RolId\"")
+	private Integer rolId;
+	
+	@Column(name="\"Rol\"")
+	private String rol;
+	
 	@Column(name="\"GrupoId\"")
 	private Integer grupoId;
 
-	@Column(name="\"NivelAplicacion\"")
-	private String nivelAplicacion;
+	@Column(name="\"Grupo\"")
+	private String grupo;
+	
+	@Column(name="\"ComponenteId\"")
+	private Integer componenteId;
 
-	@Column(name="\"UrlAplicacion\"")
-	private String urlAplicacion;
+	@Column(name="\"AplicacionId\"")
+	private Integer aplicacionId;
+	
+	@Column(name="\"TipoComponenteId\"")
+	private String tipoComponenteId;
 
-	@Column(name="\"UsuarioId\"")
-	private Integer usuarioId;
+	@Column(name="\"Codigo\"")
+	private String codigo;
 
-	@Column(name="\"IconoAplicacion\"")
-	private String iconoAplicacion;
+	@Column(name="\"CodigoEncriptado\"")
+	private String codigoEncriptado;
+	
+	@Column(name="\"Descripcion\"")
+	private String descripcion;
 
+	@Column(name="\"Nivel\"")
+	private String nivel;
+
+	@Column(name="\"PadreId\"")
+	private Integer padreId;
+
+	@Column(name="\"Icono\"")
+	private String icono;
+	
+	@Column(name="\"Url\"")
+	private String url;
+	
 	public VAccesoGrupoAplicacion() {
 	}
 
-	public String getAplicacion() {
-		return this.aplicacion;
+	public Integer getIdCorrelativo() {
+		return idCorrelativo;
 	}
 
-	public void setAplicacion(String aplicacion) {
-		this.aplicacion = aplicacion;
-	}
-
-	public String getCodigoAplicacion() {
-		return this.codigoAplicacion;
-	}
-
-	public void setCodigoAplicacion(String codigoAplicacion) {
-		this.codigoAplicacion = codigoAplicacion;
-	}
-
-	public Integer getComponenteId() {
-		return this.componenteId;
-	}
-
-	public void setComponenteId(Integer componenteId) {
-		this.componenteId = componenteId;
-	}
-
-	public String getDescripcionAplicacion() {
-		return this.descripcionAplicacion;
-	}
-
-	public void setDescripcionAplicacion(String descripcionAplicacion) {
-		this.descripcionAplicacion = descripcionAplicacion;
-	}
-
-	public String getGrupo() {
-		return this.grupo;
-	}
-
-	public void setGrupo(String grupo) {
-		this.grupo = grupo;
-	}
-
-	public String getGrupoDescripcion() {
-		return this.grupoDescripcion;
-	}
-
-	public void setGrupoDescripcion(String grupoDescripcion) {
-		this.grupoDescripcion = grupoDescripcion;
-	}
-
-	public Integer getGrupoId() {
-		return this.grupoId;
-	}
-
-	public void setGrupoId(Integer grupoId) {
-		this.grupoId = grupoId;
-	}
-
-	public String getNivelAplicacion() {
-		return this.nivelAplicacion;
-	}
-
-	public void setNivelAplicacion(String nivelAplicacion) {
-		this.nivelAplicacion = nivelAplicacion;
-	}
-
-	public String getUrlAplicacion() {
-		return this.urlAplicacion;
-	}
-
-	public void setUrlAplicacion(String urlAplicacion) {
-		this.urlAplicacion = urlAplicacion;
+	public void setIdCorrelativo(Integer idCorrelativo) {
+		this.idCorrelativo = idCorrelativo;
 	}
 
 	public Integer getUsuarioId() {
-		return this.usuarioId;
+		return usuarioId;
 	}
 
 	public void setUsuarioId(Integer usuarioId) {
 		this.usuarioId = usuarioId;
 	}
 
-	public Integer getId() {
-		return id;
+	public Integer getRolId() {
+		return rolId;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setRolId(Integer rolId) {
+		this.rolId = rolId;
 	}
 
-	public String getIconoAplicacion() {
-		return iconoAplicacion;
+	public String getRol() {
+		return rol;
 	}
 
-	public void setIconoAplicacion(String iconoAplicacion) {
-		this.iconoAplicacion = iconoAplicacion;
+	public void setRol(String rol) {
+		this.rol = rol;
+	}
+
+	public Integer getGrupoId() {
+		return grupoId;
+	}
+
+	public void setGrupoId(Integer grupoId) {
+		this.grupoId = grupoId;
+	}
+
+	public String getGrupo() {
+		return grupo;
+	}
+
+	public void setGrupo(String grupo) {
+		this.grupo = grupo;
+	}
+
+	public Integer getComponenteId() {
+		return componenteId;
+	}
+
+	public void setComponenteId(Integer componenteId) {
+		this.componenteId = componenteId;
+	}
+
+	public Integer getAplicacionId() {
+		return aplicacionId;
+	}
+
+	public void setAplicacionId(Integer aplicacionId) {
+		this.aplicacionId = aplicacionId;
+	}
+
+	public String getTipoComponenteId() {
+		return tipoComponenteId;
+	}
+
+	public void setTipoComponenteId(String tipoComponenteId) {
+		this.tipoComponenteId = tipoComponenteId;
+	}
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public String getCodigoEncriptado() {
+		return codigoEncriptado;
+	}
+
+	public void setCodigoEncriptado(String codigoEncriptado) {
+		this.codigoEncriptado = codigoEncriptado;
+	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	public String getNivel() {
+		return nivel;
+	}
+
+	public void setNivel(String nivel) {
+		this.nivel = nivel;
+	}
+
+	public Integer getPadreId() {
+		return padreId;
+	}
+
+	public void setPadreId(Integer padreId) {
+		this.padreId = padreId;
+	}
+
+	public String getIcono() {
+		return icono;
+	}
+
+	public void setIcono(String icono) {
+		this.icono = icono;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 	
 }

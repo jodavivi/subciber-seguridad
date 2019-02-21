@@ -6,7 +6,7 @@ package com.subciber.seguridad.dao.impl;
 import java.io.Serializable;
 import java.text.MessageFormat;
 
-import javax.enterprise.context.Dependent;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
@@ -14,7 +14,7 @@ import javax.persistence.TypedQuery;
 import com.subciber.seguridad.dao.api.AutenticacionRxDao;
 import com.subciber.seguridad.dao.base.BaseJPADao;
 import com.subciber.seguridad.dto.AutenticacionFiltroDto;
-import com.subciber.seguridad.entity.VUsuario;
+import com.subciber.seguridad.entity.VUsuarioAutenticacion;
 import com.subciber.seguridad.exception.DaoException;
 import com.subciber.seguridad.property.MessageProvider;
 
@@ -24,8 +24,8 @@ import com.subciber.seguridad.property.MessageProvider;
  * @version 0.1, 11/02/2019
  * @update
  */
-@Dependent
-public class AutenticacionRxDaoImpl extends BaseJPADao<VUsuario> implements AutenticacionRxDao, Serializable {
+@Stateless
+public class AutenticacionRxDaoImpl extends BaseJPADao<VUsuarioAutenticacion> implements AutenticacionRxDao, Serializable {
 
 	@Inject
     private MessageProvider messageProvider;
@@ -38,14 +38,14 @@ public class AutenticacionRxDaoImpl extends BaseJPADao<VUsuario> implements Aute
 	 * {@inheritDoc}
 	 */
 	@Override
-	public VUsuario autenticar(AutenticacionFiltroDto request) throws DaoException {
+	public VUsuarioAutenticacion autenticar(AutenticacionFiltroDto request) throws DaoException {
 		
 		StringBuilder jpql = null;
 		StringBuilder jpqlSelect = null;
 		StringBuilder jpqlWhere = null;
 		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
-		TypedQuery<VUsuario> query = null;
-		VUsuario resultado = null;
+		TypedQuery<VUsuarioAutenticacion> query = null;
+		VUsuarioAutenticacion resultado = null;
 		try {
 			jpqlSelect = new StringBuilder();
 			jpqlSelect.append("SELECT ");
@@ -66,7 +66,7 @@ public class AutenticacionRxDaoImpl extends BaseJPADao<VUsuario> implements Aute
 			jpql.append(jpqlSelect);
 			jpql.append(jpqlWhere);
 			
-			query = entityManager.createQuery(jpql.toString(), VUsuario.class);
+			query = entityManager.createQuery(jpql.toString(), VUsuarioAutenticacion.class);
 			query.setParameter("estadoId", 23);
 			query.setParameter("usuario", request.getUsuario());
 			query.setParameter("clave", request.getClave());

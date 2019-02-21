@@ -13,6 +13,7 @@
   	<module>subciber-seguridad-persistence</module>
   	<module>subciber-seguridad-rest</module>
   	<module>subciber-seguridad-shared</module>
+  	<module>subciber-seguridad-client</module>
   </modules>
   <properties>
 		<project.build.sourceencoding>UTF-8</project.build.sourceencoding>
@@ -152,6 +153,13 @@
 				<artifactId>subciber-seguridad-rest</artifactId>
 				<version>1.0</version>
 				<type>war</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>subciber-seguridad-client</artifactId>
+				<version>1.0</version>
+				<type>jar</type>
 				<scope>compile</scope>
 			</dependency>
 		</dependencies>

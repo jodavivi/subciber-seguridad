@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -22,13 +23,16 @@ import com.subciber.seguridad.business.dto.InfoUsuarioDto;
 import com.subciber.seguridad.dao.api.AccesosRecursosUsuarioRxDao;
 import com.subciber.seguridad.dao.api.AccesosUsuarioRxDao;
 import com.subciber.seguridad.dao.api.AutenticacionRxDao;
+import com.subciber.seguridad.dao.api.UsuarioRxDao;
 import com.subciber.seguridad.dto.AccesoFiltroDto;
 import com.subciber.seguridad.dto.AutenticacionFiltroDto;
 import com.subciber.seguridad.dto.UsuarioAplicacionDto;
+import com.subciber.seguridad.dto.UsuarioFiltroDto;
 import com.subciber.seguridad.dto.UsuarioGrupoDto;
 import com.subciber.seguridad.entity.VAccesoComponente;
 import com.subciber.seguridad.entity.VAccesoGrupoAplicacion;
 import com.subciber.seguridad.entity.VUsuario;
+import com.subciber.seguridad.entity.VUsuarioAutenticacion;
 import com.subciber.seguridad.exception.BusinessException;
 import com.subciber.seguridad.exception.DaoException;
 import com.subciber.seguridad.property.MessageProvider;
@@ -47,11 +51,13 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
 
 	@Inject
     private MessageProvider messageProvider;
-	@Inject
+	@EJB
     private AutenticacionRxDao autenticacionDao;
-	@Inject
+	@EJB
+    private UsuarioRxDao usuarioRxDao;
+	@EJB
 	private AccesosUsuarioRxDao accesosUsuarioDao;
-	@Inject
+	@EJB
 	private AccesosRecursosUsuarioRxDao accesosRecursosUsuarioDao;
 	@Inject
 	private Utilitario utilitario;
@@ -78,24 +84,34 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
 			respuesta = new ResponseGenericDto<InfoUsuarioDto>();
 			StringBuilder accesosList = new StringBuilder();
 			
-			//1. Obtenemos la informacion del usuario
+			//1. Validamos el usuario y la clave
 			AutenticacionFiltroDto filtroUsuario = new AutenticacionFiltroDto();
 			filtroUsuario.setUsuario(request.getObjectRequest().getUsuario());
 			filtroUsuario.setClave(convertClaveAes);
-			VUsuario usuarioAutenticar = autenticacionDao.autenticar(filtroUsuario);
+			VUsuarioAutenticacion usuarioAutenticar = autenticacionDao.autenticar(filtroUsuario);
 			if(usuarioAutenticar == null) {
 				throw new  BusinessException(messageProvider.codigoErrorIdf4, MessageFormat.format(messageProvider.mensajeErrorIdf4,"Usuario"));
 			}
 			
-			InfoUsuarioDto infoUsuarioDto = new InfoUsuarioDto(); 
-			infoUsuarioDto.getUsuario().setUsuario(usuarioAutenticar.getUsuario());
-			infoUsuarioDto.getUsuario().setEmailUsuario(usuarioAutenticar.getEmail());
-			infoUsuarioDto.getUsuario().setCodigoUsuario(usuarioAutenticar.getCodigoUsuario());
-			infoUsuarioDto.getUsuario().setImagenUsuario(usuarioAutenticar.getImagen());
-			infoUsuarioDto.getUsuario().setNombre(usuarioAutenticar.getNombre());
-			infoUsuarioDto.getUsuario().setApellido(usuarioAutenticar.getApellido());
+			//2. Obtenemos la informacion del usuairo
+			UsuarioFiltroDto consultarUsuarioRequest = new UsuarioFiltroDto();
+			consultarUsuarioRequest.setUsuarioId(usuarioAutenticar.getId());
+			consultarUsuarioRequest.setEstadoId(23);
+			List<VUsuario> consultarUsuarioResponse = usuarioRxDao.consultarUsuario(consultarUsuarioRequest);
 			
-			//2. consultamos si tiene grupos y aplicaciones asignadas
+			if(consultarUsuarioResponse == null ||  consultarUsuarioResponse.size() > 1) {
+				throw new  BusinessException(messageProvider.codigoErrorIdf2, MessageFormat.format(messageProvider.mensajeErrorIdf2,"Usuario"));
+			}
+			
+			InfoUsuarioDto infoUsuarioDto = new InfoUsuarioDto(); 
+			infoUsuarioDto.getUsuario().setUsuario(consultarUsuarioResponse.get(0).getUsuario());
+			infoUsuarioDto.getUsuario().setEmailUsuario(consultarUsuarioResponse.get(0).getEmail());
+			infoUsuarioDto.getUsuario().setApellido(consultarUsuarioResponse.get(0).getApellido());
+			infoUsuarioDto.getUsuario().setCodigoUsuario(consultarUsuarioResponse.get(0).getCodigo());
+			infoUsuarioDto.getUsuario().setNombre(consultarUsuarioResponse.get(0).getNombre());
+			infoUsuarioDto.getUsuario().setImagenUsuario(consultarUsuarioResponse.get(0).getImagen());
+			
+			//3. consultamos si tiene grupos y aplicaciones asignadas
 			AccesoFiltroDto filtroAcceso = new AccesoFiltroDto();
 			filtroAcceso.setUsuarioId(usuarioAutenticar.getId());
 			List<VAccesoGrupoAplicacion>  listGrupoAplicaciones = accesosUsuarioDao.accesosGrupoAplicacionesUsuario(filtroAcceso);
@@ -109,14 +125,15 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
 				UsuarioGrupoDto grupo = new UsuarioGrupoDto();
 				if(!listGrupos.contains(acceso.getGrupo())) {
 					listGrupos.add(acceso.getGrupo());
-					grupo.setCodigoGrupo(acceso.getGrupo());
-					grupo.setNombreGrupo(acceso.getGrupoDescripcion());
+					grupo.setCodigoGrupo(acceso.getGrupoId());
+					grupo.setNombreGrupo(acceso.getGrupo());
 					for(VAccesoGrupoAplicacion aplicacion : listGrupoAplicaciones) {
 						if(aplicacion.getGrupo() == acceso.getGrupo()) {
 							UsuarioAplicacionDto app = new UsuarioAplicacionDto();
-							app.setAplicacion(aplicacion.getDescripcionAplicacion());
-							app.setUrl(aplicacion.getUrlAplicacion());
-							app.setIcono(aplicacion.getIconoAplicacion());
+							app.setAplicacionId(aplicacion.getAplicacionId());
+							app.setAplicacion(aplicacion.getDescripcion());
+							app.setUrl(aplicacion.getUrl());
+							app.setIcono(aplicacion.getIcono());
 							grupo.getAplicaciones().add(app);
 						}
 					}

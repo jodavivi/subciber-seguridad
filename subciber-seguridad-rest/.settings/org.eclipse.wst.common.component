@@ -13,6 +13,9 @@
         <dependent-module archiveName="subciber-seguridad-business-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/subciber-seguridad-business/subciber-seguridad-business">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="subciber-seguridad-client-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/subciber-seguridad-client/subciber-seguridad-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="subciber-seguridad-dao-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/subciber-seguridad-dao/subciber-seguridad-dao">
             <dependency-type>uses</dependency-type>
         </dependent-module>

@@ -13,6 +13,7 @@ public class UsuarioFiltroDto implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
+	private Integer usuarioId;
 	private String usuario;
 	private String correo;
 	private Integer estadoId;
@@ -34,6 +35,12 @@ public class UsuarioFiltroDto implements Serializable{
 	}
 	public void setEstadoId(Integer estadoId) {
 		this.estadoId = estadoId;
+	}
+	public Integer getUsuarioId() {
+		return usuarioId;
+	}
+	public void setUsuarioId(Integer usuarioId) {
+		this.usuarioId = usuarioId;
 	}
 	
 }
