@@ -19,6 +19,7 @@ import com.subciber.seguridad.base.dto.RequestGenericDto;
 import com.subciber.seguridad.client.api.EmailClient;
 import com.subciber.seguridad.client.dto.EmailRequestClientDto;
 import com.subciber.seguridad.client.dto.EmailResponseClientDto;
+import com.subciber.seguridad.client.util.ConfigUrlClient;
 import com.subciber.seguridad.exception.ClientException;
 import com.subciber.seguridad.property.MessageClientService;
 
@@ -41,7 +42,7 @@ public class EmailClientImpl  implements EmailClient{
 			headers.add("terminal", request.getAuditRequest().getTerminal());
 			headers.add("transaccionId", request.getAuditRequest().getTransaccionId());
 			headers.add("tokens", request.getAuditRequest().getSession());
-			String url = "http://localhost:8088/subciber-configuracion-rest/rest/enviocorreo/";
+			String url = ConfigUrlClient.urlEnvioCorreo;
 			Response response = client.target(url).request(MediaType.APPLICATION_JSON).headers(headers).post(Entity.entity(request.getObjectRequest(), MediaType.APPLICATION_JSON));
 			
 			EmailResponseClientDto respuestaEnvioEmail = response.readEntity(EmailResponseClientDto.class);
