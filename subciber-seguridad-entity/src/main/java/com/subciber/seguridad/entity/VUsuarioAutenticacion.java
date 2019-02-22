@@ -111,4 +111,11 @@ public class VUsuarioAutenticacion implements Serializable {
 		this.clave = clave;
 	}
 
+
+	@Override
+	public String toString() {
+		return "VUsuarioAutenticacion [id=" + id + ", estadoId=" + estadoId + ", estado=" + estado + ", usuario="
+				+ usuario + ", email=" + email + ", aplicacionId=" + aplicacionId + ", clave=" + clave + "]";
+	}
+
 }

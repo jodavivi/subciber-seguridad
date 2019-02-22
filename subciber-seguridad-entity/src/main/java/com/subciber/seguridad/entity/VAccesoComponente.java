@@ -157,4 +157,13 @@ public class VAccesoComponente implements Serializable {
 		this.url = url;
 	}
 
+	@Override
+	public String toString() {
+		return "VAccesoComponente [idCorrelativo=" + idCorrelativo + ", usuarioId=" + usuarioId + ", codigoUsuario="
+				+ codigoUsuario + ", componenteId=" + componenteId + ", aplicacionId=" + aplicacionId
+				+ ", tipoComponenteId=" + tipoComponenteId + ", codigoComponente=" + codigoComponente
+				+ ", codigoEncriptado=" + codigoEncriptado + ", descripcion=" + descripcion + ", nivel=" + nivel
+				+ ", padreId=" + padreId + ", url=" + url + "]";
+	}
+
 }

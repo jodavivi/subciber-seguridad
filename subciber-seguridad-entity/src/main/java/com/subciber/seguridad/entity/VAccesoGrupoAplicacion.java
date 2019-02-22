@@ -198,5 +198,13 @@ public class VAccesoGrupoAplicacion implements Serializable {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "VAccesoGrupoAplicacion [idCorrelativo=" + idCorrelativo + ", usuarioId=" + usuarioId + ", rolId="
+				+ rolId + ", rol=" + rol + ", grupoId=" + grupoId + ", grupo=" + grupo + ", componenteId="
+				+ componenteId + ", aplicacionId=" + aplicacionId + ", tipoComponenteId=" + tipoComponenteId
+				+ ", codigo=" + codigo + ", codigoEncriptado=" + codigoEncriptado + ", descripcion=" + descripcion
+				+ ", nivel=" + nivel + ", padreId=" + padreId + ", icono=" + icono + ", url=" + url + "]";
+	}
 }

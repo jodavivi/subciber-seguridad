@@ -133,4 +133,11 @@ public class VUsuario implements Serializable {
 		this.apellido = apellido;
 	}
 
+	@Override
+	public String toString() {
+		return "VUsuario [id=" + id + ", estadoId=" + estadoId + ", estado=" + estado + ", codigo=" + codigo
+				+ ", usuario=" + usuario + ", email=" + email + ", imagen=" + imagen + ", aplicacionId=" + aplicacionId
+				+ ", nombre=" + nombre + ", apellido=" + apellido + "]";
+	}
+
 }

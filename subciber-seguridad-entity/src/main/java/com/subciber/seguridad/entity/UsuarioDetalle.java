@@ -18,13 +18,13 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(schema="\"Seguridad\"", name="\"Usuario\"")
-public class Usuario implements Serializable {
+@Table(schema="\"Seguridad\"", name="\"UsuarioDetalle\"")
+public class UsuarioDetalle implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "seq_usuario", schema="\"Seguridad\"", sequenceName = "\"Usuario_Id_seq\"", allocationSize = 1)
-	@GeneratedValue(generator = "seq_usuario")
+	@SequenceGenerator(name = "seq_usuario_detalle", schema="\"Seguridad\"", sequenceName = "\"UsuarioDetalle_Id_seq\"", allocationSize = 1)
+	@GeneratedValue(generator = "seq_usuario_detalle")
 	@Column(name="\"Id\"")
 	private Integer id;
 	
@@ -49,22 +49,20 @@ public class Usuario implements Serializable {
 	@Column(name="\"TransaccionId\"")
 	private String transaccionId = "";
 
-	@Column(name="\"Codigo\"")
-	private String codigo;
+	@Column(name="\"UsuarioId\"")
+	private Integer usuarioId;
 
-	@Column(name="\"Usuario\"")
-	private String usuario;
+	@Column(name="\"Nombre\"")
+	private String nombre;
 	
-	@Column(name="\"Clave\"")
-	private String clave;
+	@Column(name="\"Apellido\"")
+	private String apellido;
+	
+	@Column(name="\"Imagen\"")
+	private String imagen;
 
-	@Column(name="\"Email\"")
-	private String email;
 
-	@Column(name="\"AplicacionId\"")
-	private Integer aplicacionId;
-
-	public Usuario() {
+	public UsuarioDetalle() {
 	}
 
 	public Integer getId() {
@@ -131,53 +129,45 @@ public class Usuario implements Serializable {
 		this.transaccionId = transaccionId;
 	}
 
-	public String getCodigo() {
-		return codigo;
+	public Integer getUsuarioId() {
+		return usuarioId;
 	}
 
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
+	public void setUsuarioId(Integer usuarioId) {
+		this.usuarioId = usuarioId;
 	}
 
-	public String getUsuario() {
-		return usuario;
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
-	public String getClave() {
-		return clave;
+	public String getApellido() {
+		return apellido;
 	}
 
-	public void setClave(String clave) {
-		this.clave = clave;
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
+	}
+	
+	public String getImagen() {
+		return imagen;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Integer getAplicacionId() {
-		return aplicacionId;
-	}
-
-	public void setAplicacionId(Integer aplicacionId) {
-		this.aplicacionId = aplicacionId;
+	public void setImagen(String imagen) {
+		this.imagen = imagen;
 	}
 
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", estadoId=" + estadoId + ", usuarioCreador=" + usuarioCreador
+		return "UsuarioDetalle [id=" + id + ", estadoId=" + estadoId + ", usuarioCreador=" + usuarioCreador
 				+ ", fechaCreacion=" + fechaCreacion + ", terminalCreacion=" + terminalCreacion + ", fechaModificacion="
 				+ fechaModificacion + ", terminalModificador=" + terminalModificador + ", transaccionId="
-				+ transaccionId + ", codigo=" + codigo + ", usuario=" + usuario + ", clave=" + clave + ", email="
-				+ email + ", aplicacionId=" + aplicacionId + "]";
+				+ transaccionId + ", usuarioId=" + usuarioId + ", nombre=" + nombre + ", apellido=" + apellido
+				+ ", imagen=" + imagen + "]";
 	}
-	
+
 }
