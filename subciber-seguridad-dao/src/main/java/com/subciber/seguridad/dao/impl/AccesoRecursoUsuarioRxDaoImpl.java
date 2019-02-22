@@ -4,6 +4,7 @@
 package com.subciber.seguridad.dao.impl;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -70,7 +71,13 @@ public class AccesoRecursoUsuarioRxDaoImpl extends BaseJPADao<VAccesoComponente>
 		}catch (NoResultException e){
 			resultado = null;
 		} catch(Exception e) {
-			throw new DaoException(messageProvider.codigoErrorIdt1, MessageFormat.format(messageProvider.mensajeErrorIdt1, clase, metodo, e.getStackTrace()[0].getLineNumber(), tableName, e.getMessage()));
+			String error = "";
+			 Throwable th = e.getCause();
+			  if(th.getCause() instanceof SQLException) {
+				  SQLException cause = (SQLException) th.getCause();
+				  error =cause.getMessage();
+			  }
+			throw new DaoException(messageProvider.codigoErrorIdt1, MessageFormat.format(messageProvider.mensajeErrorIdt1, clase, metodo, e.getStackTrace()[0].getLineNumber(), tableName, error));
 		}
 		
 		return resultado;
