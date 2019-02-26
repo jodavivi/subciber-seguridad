@@ -5,8 +5,8 @@ package com.subciber.seguridad.business.api;
 
 import com.subciber.seguridad.base.dto.RequestGenericDto;
 import com.subciber.seguridad.base.dto.ResponseGenericDto;
-import com.subciber.seguridad.business.dto.InfoUsuarioDto;
 import com.subciber.seguridad.dto.AutenticacionFiltroDto;
+import com.subciber.seguridad.dto.InfoUsuarioDto;
 import com.subciber.seguridad.exception.BusinessException;
 
 /**

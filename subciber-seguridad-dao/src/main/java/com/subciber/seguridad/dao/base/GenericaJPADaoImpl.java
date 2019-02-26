@@ -51,6 +51,23 @@ public abstract  class GenericaJPADaoImpl<T> extends BaseJPADao<T>  implements G
 	/**
 	 * {@inheritDoc}
 	 */
+	public T buscarId(Integer id) throws DaoException{
+
+		T response  = null;
+		try {
+			metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+			T responseFind = entityManager.find(entityClass, id);
+			response = responseFind;
+		}catch(Exception e) {
+			throw new DaoException(messageProvider.codigoErrorIdt1, MessageFormat.format(messageProvider.mensajeErrorIdt1, clase, metodo, e.getStackTrace()[0].getLineNumber(), tableName, e.getMessage()));
+		}
+		
+		return response;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public T crear(T request) throws DaoException {
 		try {
@@ -61,9 +78,6 @@ public abstract  class GenericaJPADaoImpl<T> extends BaseJPADao<T>  implements G
 			  Throwable th = e.getCause();
 				  if(th.getCause() instanceof SQLException) {
 					  SQLException cause = (SQLException) th.getCause();
-					 // String estado = cause.getSQLState();
-					  //if(estado.equalsIgnoreCase("23505")) {
-					  //}
 					  throw new DaoException(messageProvider.codigoErrorIdt1, MessageFormat.format(messageProvider.mensajeErrorIdt1, clase, metodo, e.getStackTrace()[0].getLineNumber(), tableName, cause.getMessage()));
 				  }
 			 
@@ -72,5 +86,48 @@ public abstract  class GenericaJPADaoImpl<T> extends BaseJPADao<T>  implements G
 		}
 		
 		return request;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void actualizar(T request) throws DaoException {
+		try {
+			metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+			entityManager.merge(request);
+			entityManager.flush();
+		}catch(PersistenceException e) {
+			  Throwable th = e.getCause();
+				  if(th.getCause() instanceof SQLException) {
+					  SQLException cause = (SQLException) th.getCause();
+					  throw new DaoException(messageProvider.codigoErrorIdt1, MessageFormat.format(messageProvider.mensajeErrorIdt1, clase, metodo, e.getStackTrace()[0].getLineNumber(), tableName, cause.getMessage()));
+				  }
+			 
+		}catch(Exception e) {
+			throw new DaoException(messageProvider.codigoErrorIdt1, MessageFormat.format(messageProvider.mensajeErrorIdt1, clase, metodo, e.getStackTrace()[0].getLineNumber(), tableName, e.getMessage()));
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void eliminar(T request) throws DaoException {
+		try {
+			metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+			entityManager.merge(request);
+			entityManager.flush();
+			
+		}catch(PersistenceException e) {
+			  Throwable th = e.getCause();
+				  if(th.getCause() instanceof SQLException) {
+					  SQLException cause = (SQLException) th.getCause();
+					  throw new DaoException(messageProvider.codigoErrorIdt1, MessageFormat.format(messageProvider.mensajeErrorIdt1, clase, metodo, e.getStackTrace()[0].getLineNumber(), tableName, cause.getMessage()));
+				  }
+			 
+		}catch(Exception e) {
+			throw new DaoException(messageProvider.codigoErrorIdt1, MessageFormat.format(messageProvider.mensajeErrorIdt1, clase, metodo, e.getStackTrace()[0].getLineNumber(), tableName, e.getMessage()));
+		}
 	}
 }

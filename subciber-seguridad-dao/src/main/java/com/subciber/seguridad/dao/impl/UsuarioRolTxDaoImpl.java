@@ -13,9 +13,9 @@ import javax.inject.Inject;
 import javax.persistence.Query;
 
 import com.subciber.seguridad.base.dto.RequestGenericEliminarDto;
-import com.subciber.seguridad.dao.api.UsuarioDetalleTxDao;
+import com.subciber.seguridad.dao.api.UsuarioRolTxDao;
 import com.subciber.seguridad.dao.base.GenericaJPADaoImpl;
-import com.subciber.seguridad.entity.UsuarioDetalle;
+import com.subciber.seguridad.entity.UsuarioRol;
 import com.subciber.seguridad.exception.DaoException;
 import com.subciber.seguridad.property.MessageProvider;
 import com.subciber.seguridad.util.ConstantesConfig;
@@ -25,8 +25,7 @@ import com.subciber.seguridad.util.ConstantesConfig;
  *
  */
 @Stateless
-public class UsuarioDetalleTxDaoImpl extends GenericaJPADaoImpl<UsuarioDetalle>
-		implements UsuarioDetalleTxDao, Serializable {
+public class UsuarioRolTxDaoImpl extends GenericaJPADaoImpl<UsuarioRol>  implements UsuarioRolTxDao  , Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Inject
@@ -38,7 +37,8 @@ public class UsuarioDetalleTxDaoImpl extends GenericaJPADaoImpl<UsuarioDetalle>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void eliminarUsuarioDetallexIdUsuario(RequestGenericEliminarDto request) throws DaoException {
+	public void eliminarUsuarioRolxIdUsuario(RequestGenericEliminarDto request) throws DaoException {
+		 
 		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
 		
 		StringBuilder jpql 			= null;
@@ -84,4 +84,6 @@ public class UsuarioDetalleTxDaoImpl extends GenericaJPADaoImpl<UsuarioDetalle>
 		}
 	}
 
+
 }
+

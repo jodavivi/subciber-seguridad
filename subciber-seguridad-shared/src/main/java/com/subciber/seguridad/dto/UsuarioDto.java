@@ -1,9 +1,10 @@
 /**
  * 
  */
-package com.subciber.seguridad.business.dto;
+package com.subciber.seguridad.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author josep
@@ -19,6 +20,7 @@ public class UsuarioDto implements Serializable{
 	private String nombre;
 	private String apellido;
 	private String tokenUsuario;
+	private List<Integer> rol;
 	
 	public String getUsuario() {
 		return usuario;
@@ -62,4 +64,11 @@ public class UsuarioDto implements Serializable{
 	public void setTokenUsuario(String tokenUsuario) {
 		this.tokenUsuario = tokenUsuario;
 	}
+	public List<Integer> getRol() {
+		return rol;
+	}
+	public void setRol(List<Integer> rol) {
+		this.rol = rol;
+	}
+	
 }

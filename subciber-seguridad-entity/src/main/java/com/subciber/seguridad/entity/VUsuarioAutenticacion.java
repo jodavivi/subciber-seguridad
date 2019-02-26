@@ -29,6 +29,9 @@ public class VUsuarioAutenticacion implements Serializable {
 	@Column(name="\"Estado\"")
 	private String estado;
 
+	@Column(name="\"Codigo\"")
+	private String codigo;
+	
 	@Column(name="\"Usuario\"")
 	private String usuario;
 	
@@ -111,11 +114,19 @@ public class VUsuarioAutenticacion implements Serializable {
 		this.clave = clave;
 	}
 
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
 
 	@Override
 	public String toString() {
-		return "VUsuarioAutenticacion [id=" + id + ", estadoId=" + estadoId + ", estado=" + estado + ", usuario="
-				+ usuario + ", email=" + email + ", aplicacionId=" + aplicacionId + ", clave=" + clave + "]";
+		return "VUsuarioAutenticacion [id=" + id + ", estadoId=" + estadoId + ", estado=" + estado + ", codigo="
+				+ codigo + ", usuario=" + usuario + ", email=" + email + ", aplicacionId=" + aplicacionId + ", clave="
+				+ clave + "]";
 	}
-
 }

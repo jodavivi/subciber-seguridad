@@ -3,7 +3,7 @@
  */
 package com.subciber.seguridad.business.api;
 
-import com.subciber.seguridad.business.dto.InfoJwt;
+import com.subciber.seguridad.dto.InfoJwt;
 import com.subciber.seguridad.exception.BusinessException;
 
 /**

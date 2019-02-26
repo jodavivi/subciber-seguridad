@@ -24,11 +24,31 @@ public interface GenericaJPADao<T> {
 	public abstract Integer obtenerId(String sqlSecuencia) throws DaoException;
 	
 	/**
-	 * @param Metodo para crar objetos
+	 * @param Metodo buscar por Id
+	 * @return el Id del Registro
+	 * @throws DaoException 
+	 */
+	public abstract T buscarId(Integer id) throws DaoException;
+	
+	/**
+	 * @param Metodo para crear objetos
 	 * @return el Id del Registro
 	 * @throws DaoException 
 	 */
 	public abstract T crear(T request) throws DaoException;
 	
+	/**
+	 * @param Metodo para actualizar objetos
+	 * @return  
+	 * @throws DaoException 
+	 */
+	public abstract void actualizar(T request) throws DaoException;
+	
+	/**
+	 * @param Metodo para actualizar objetos
+	 * @return  
+	 * @throws DaoException 
+	 */
+	public abstract void eliminar(T request) throws DaoException;
 	    
 }

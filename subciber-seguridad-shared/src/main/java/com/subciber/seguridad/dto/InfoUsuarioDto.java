@@ -1,13 +1,11 @@
 /**
  * 
  */
-package com.subciber.seguridad.business.dto;
+package com.subciber.seguridad.dto;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.subciber.seguridad.dto.UsuarioGrupoDto;
 
 /**
  * @author josep

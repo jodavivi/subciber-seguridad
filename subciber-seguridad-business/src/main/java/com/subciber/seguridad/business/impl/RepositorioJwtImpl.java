@@ -11,7 +11,7 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 
 import com.subciber.seguridad.business.api.RepositorioJwt;
-import com.subciber.seguridad.business.dto.InfoJwt;
+import com.subciber.seguridad.dto.InfoJwt;
 import com.subciber.seguridad.exception.BusinessException;
 
 /**

@@ -18,13 +18,13 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(schema="\"Seguridad\"", name="\"Usuario\"")
-public class Usuario implements Serializable {
+@Table(schema="\"Seguridad\"", name="\"UsuarioRol\"")
+public class UsuarioRol implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "seq_usuario", schema="\"Seguridad\"", sequenceName = "\"Usuario_Id_seq\"", allocationSize = 1)
-	@GeneratedValue(generator = "seq_usuario")
+	@SequenceGenerator(name = "seq_usuario_rol", schema="\"Seguridad\"", sequenceName = "\"UsuarioRol_Id_seq\"", allocationSize = 1)
+	@GeneratedValue(generator = "seq_usuario_rol")
 	@Column(name="\"Id\"")
 	private Integer id;
 	
@@ -39,10 +39,10 @@ public class Usuario implements Serializable {
 
 	@Column(name="\"TerminalCreacion\"")
 	private String terminalCreacion;
-	
+
 	@Column(name="\"UsuarioModificador\"")
 	private String usuarioModificador;
-
+	
 	@Column(name="\"FechaModificacion\"")
 	private LocalDateTime fechaModificacion;
 
@@ -52,22 +52,13 @@ public class Usuario implements Serializable {
 	@Column(name="\"TransaccionId\"")
 	private String transaccionId = "";
 
-	@Column(name="\"Codigo\"")
-	private String codigo;
+	@Column(name="\"UsuarioId\"")
+	private Integer usuarioId;
 
-	@Column(name="\"Usuario\"")
-	private String usuario;
+	@Column(name="\"RolId\"")
+	private Integer rolId;
 	
-	@Column(name="\"Clave\"")
-	private String clave;
-
-	@Column(name="\"Email\"")
-	private String email;
-
-	@Column(name="\"AplicacionId\"")
-	private Integer aplicacionId;
-
-	public Usuario() {
+	public UsuarioRol() {
 	}
 
 	public Integer getId() {
@@ -134,44 +125,12 @@ public class Usuario implements Serializable {
 		this.transaccionId = transaccionId;
 	}
 
-	public String getCodigo() {
-		return codigo;
+	public Integer getUsuarioId() {
+		return usuarioId;
 	}
 
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
-	}
-
-	public String getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
-	}
-
-	public String getClave() {
-		return clave;
-	}
-
-	public void setClave(String clave) {
-		this.clave = clave;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Integer getAplicacionId() {
-		return aplicacionId;
-	}
-
-	public void setAplicacionId(Integer aplicacionId) {
-		this.aplicacionId = aplicacionId;
+	public void setUsuarioId(Integer usuarioId) {
+		this.usuarioId = usuarioId;
 	}
 
 	public String getUsuarioModificador() {
@@ -182,14 +141,21 @@ public class Usuario implements Serializable {
 		this.usuarioModificador = usuarioModificador;
 	}
 
+	public Integer getRolId() {
+		return rolId;
+	}
+
+	public void setRolId(Integer rolId) {
+		this.rolId = rolId;
+	}
+
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", estadoId=" + estadoId + ", usuarioCreador=" + usuarioCreador
+		return "UsuarioRol [id=" + id + ", estadoId=" + estadoId + ", usuarioCreador=" + usuarioCreador
 				+ ", fechaCreacion=" + fechaCreacion + ", terminalCreacion=" + terminalCreacion
 				+ ", usuarioModificador=" + usuarioModificador + ", fechaModificacion=" + fechaModificacion
-				+ ", terminalModificador=" + terminalModificador + ", transaccionId=" + transaccionId + ", codigo="
-				+ codigo + ", usuario=" + usuario + ", clave=" + clave + ", email=" + email + ", aplicacionId="
-				+ aplicacionId + "]";
+				+ ", terminalModificador=" + terminalModificador + ", transaccionId=" + transaccionId + ", usuarioId="
+				+ usuarioId + ", rolId=" + rolId + "]";
 	}
 
 }

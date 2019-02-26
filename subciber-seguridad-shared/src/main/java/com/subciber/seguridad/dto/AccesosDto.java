@@ -1,4 +1,4 @@
-package com.subciber.seguridad.business.dto;
+package com.subciber.seguridad.dto;
 
 import java.io.Serializable;
 

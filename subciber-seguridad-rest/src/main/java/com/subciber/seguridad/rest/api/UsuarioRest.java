@@ -5,7 +5,9 @@ package com.subciber.seguridad.rest.api;
 
 import javax.ws.rs.core.Response;
 
-import com.subciber.seguridad.business.dto.UsuarioDetalleDto;
+import com.subciber.seguridad.base.dto.EliminarObjetoDto;
+import com.subciber.seguridad.dto.UsuarioActualizacionDto;
+import com.subciber.seguridad.dto.UsuarioDetalleDto;
 
 /**
  * @description Interface para el mantenimiento de usuario
@@ -21,4 +23,18 @@ public interface UsuarioRest {
 	 * @throws 
 	 */
 	public abstract Response crearUsuario(UsuarioDetalleDto request);
+	
+	/**
+	 * @param metodo para eliminar usuarios
+	 * @return  
+	 * @throws 
+	 */
+	public abstract Response eliminarUsuario(EliminarObjetoDto request);
+	
+	/**
+	 * @param metodo para actualizar el usuario
+	 * @return  
+	 * @throws 
+	 */
+	public abstract Response actualizarUsuario(UsuarioActualizacionDto request);
 }

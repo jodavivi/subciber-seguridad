@@ -40,6 +40,9 @@ public class UsuarioDetalle implements Serializable {
 	@Column(name="\"TerminalCreacion\"")
 	private String terminalCreacion;
 
+	@Column(name="\"UsuarioModificador\"")
+	private String usuarioModificador;
+	
 	@Column(name="\"FechaModificacion\"")
 	private LocalDateTime fechaModificacion;
 
@@ -161,13 +164,21 @@ public class UsuarioDetalle implements Serializable {
 		this.imagen = imagen;
 	}
 
+	public String getUsuarioModificador() {
+		return usuarioModificador;
+	}
+
+	public void setUsuarioModificador(String usuarioModificador) {
+		this.usuarioModificador = usuarioModificador;
+	}
+
 	@Override
 	public String toString() {
 		return "UsuarioDetalle [id=" + id + ", estadoId=" + estadoId + ", usuarioCreador=" + usuarioCreador
-				+ ", fechaCreacion=" + fechaCreacion + ", terminalCreacion=" + terminalCreacion + ", fechaModificacion="
-				+ fechaModificacion + ", terminalModificador=" + terminalModificador + ", transaccionId="
-				+ transaccionId + ", usuarioId=" + usuarioId + ", nombre=" + nombre + ", apellido=" + apellido
-				+ ", imagen=" + imagen + "]";
+				+ ", fechaCreacion=" + fechaCreacion + ", terminalCreacion=" + terminalCreacion
+				+ ", usuarioModificador=" + usuarioModificador + ", fechaModificacion=" + fechaModificacion
+				+ ", terminalModificador=" + terminalModificador + ", transaccionId=" + transaccionId + ", usuarioId="
+				+ usuarioId + ", nombre=" + nombre + ", apellido=" + apellido + ", imagen=" + imagen + "]";
 	}
 
 }
