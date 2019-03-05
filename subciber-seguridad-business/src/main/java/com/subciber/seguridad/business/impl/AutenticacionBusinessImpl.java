@@ -120,25 +120,31 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
 				throw new  BusinessException(messageProvider.codigoErrorIdf2, MessageFormat.format(messageProvider.mensajeErrorIdf2,"GrupoAplicaciones"));
 			}
 			
-			ArrayList<String> listGrupos = new ArrayList<String>();
+			ArrayList<Integer> listGruposDiferente = new ArrayList<Integer>();
+			List<VAccesoGrupoAplicacion> listGrupo = new ArrayList<VAccesoGrupoAplicacion>();
 			for(VAccesoGrupoAplicacion acceso : listGrupoAplicaciones) {
-				UsuarioGrupoDto grupo = new UsuarioGrupoDto();
-				if(!listGrupos.contains(acceso.getGrupo())) {
-					listGrupos.add(acceso.getGrupo());
-					grupo.setCodigoGrupo(acceso.getGrupoId());
-					grupo.setNombreGrupo(acceso.getGrupo());
-					for(VAccesoGrupoAplicacion aplicacion : listGrupoAplicaciones) {
-						if(aplicacion.getGrupo() == acceso.getGrupo()) {
-							UsuarioAplicacionDto app = new UsuarioAplicacionDto();
-							app.setAplicacionId(aplicacion.getAplicacionId());
-							app.setAplicacion(aplicacion.getDescripcion());
-							app.setUrl(aplicacion.getUrl());
-							app.setIcono(aplicacion.getIcono());
-							grupo.getAplicaciones().add(app);
-						}
-					}
-					infoUsuarioDto.getGrupoAplicaciones().add(grupo);
+				if(!listGruposDiferente.contains(acceso.getGrupoId())) {
+					listGruposDiferente.add(acceso.getGrupoId());
+					listGrupo.add(acceso);
 				}
+			}
+			
+			for(VAccesoGrupoAplicacion grupo : listGrupo) {
+				UsuarioGrupoDto grupoNuevo = new UsuarioGrupoDto();
+				grupoNuevo.setCodigoGrupo(grupo.getGrupoId());
+				grupoNuevo.setNombreGrupo(grupo.getGrupo());
+				for(VAccesoGrupoAplicacion aplicacion : listGrupoAplicaciones) {
+					if(aplicacion.getGrupoId() == grupo.getGrupoId()) {
+						UsuarioAplicacionDto app = new UsuarioAplicacionDto();
+						app.setAplicacionId(aplicacion.getComponenteId());
+						app.setNombre(aplicacion.getNombre());
+						app.setDescripcion(aplicacion.getDescripcion());
+						app.setUrl(aplicacion.getUrl());
+						app.setIcono(aplicacion.getIcono());
+						grupoNuevo.getAplicaciones().add(app);
+					} 
+				}
+				infoUsuarioDto.getGrupoAplicaciones().add(grupoNuevo);
 			}
 			
 			//3. Consultamos los recursos que tiene accesos el usuario

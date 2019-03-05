@@ -16,15 +16,11 @@ public class UsuarioAplicacionDto implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	private Integer aplicacionId;
-	private String aplicacion;
+	private String nombre;
+	private String descripcion;
 	private String url;
 	private String icono;
-	public String getAplicacion() {
-		return aplicacion;
-	}
-	public void setAplicacion(String aplicacion) {
-		this.aplicacion = aplicacion;
-	}
+	 
 	public String getUrl() {
 		return url;
 	}
@@ -42,6 +38,18 @@ public class UsuarioAplicacionDto implements Serializable{
 	}
 	public void setAplicacionId(Integer aplicacionId) {
 		this.aplicacionId = aplicacionId;
+	}
+	public String getNombre() {
+		return nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	public String getDescripcion() {
+		return descripcion;
+	}
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 	
 }

@@ -26,12 +26,6 @@ public class VAccesoGrupoAplicacion implements Serializable {
 	@Column(name="\"UsuarioId\"")
 	private Integer usuarioId;
 	
-	@Column(name="\"RolId\"")
-	private Integer rolId;
-	
-	@Column(name="\"Rol\"")
-	private String rol;
-	
 	@Column(name="\"GrupoId\"")
 	private Integer grupoId;
 
@@ -52,6 +46,9 @@ public class VAccesoGrupoAplicacion implements Serializable {
 
 	@Column(name="\"CodigoEncriptado\"")
 	private String codigoEncriptado;
+	
+	@Column(name="\"Nombre\"")
+	private String nombre;
 	
 	@Column(name="\"Descripcion\"")
 	private String descripcion;
@@ -85,22 +82,6 @@ public class VAccesoGrupoAplicacion implements Serializable {
 
 	public void setUsuarioId(Integer usuarioId) {
 		this.usuarioId = usuarioId;
-	}
-
-	public Integer getRolId() {
-		return rolId;
-	}
-
-	public void setRolId(Integer rolId) {
-		this.rolId = rolId;
-	}
-
-	public String getRol() {
-		return rol;
-	}
-
-	public void setRol(String rol) {
-		this.rol = rol;
 	}
 
 	public Integer getGrupoId() {
@@ -199,12 +180,21 @@ public class VAccesoGrupoAplicacion implements Serializable {
 		this.url = url;
 	}
 
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
 	@Override
 	public String toString() {
-		return "VAccesoGrupoAplicacion [idCorrelativo=" + idCorrelativo + ", usuarioId=" + usuarioId + ", rolId="
-				+ rolId + ", rol=" + rol + ", grupoId=" + grupoId + ", grupo=" + grupo + ", componenteId="
-				+ componenteId + ", aplicacionId=" + aplicacionId + ", tipoComponenteId=" + tipoComponenteId
-				+ ", codigo=" + codigo + ", codigoEncriptado=" + codigoEncriptado + ", descripcion=" + descripcion
-				+ ", nivel=" + nivel + ", padreId=" + padreId + ", icono=" + icono + ", url=" + url + "]";
+		return "VAccesoGrupoAplicacion [idCorrelativo=" + idCorrelativo + ", usuarioId=" + usuarioId + ", grupoId="
+				+ grupoId + ", grupo=" + grupo + ", componenteId=" + componenteId + ", aplicacionId=" + aplicacionId
+				+ ", tipoComponenteId=" + tipoComponenteId + ", codigo=" + codigo + ", codigoEncriptado="
+				+ codigoEncriptado + ", nombre=" + nombre + ", descripcion=" + descripcion + ", nivel=" + nivel
+				+ ", padreId=" + padreId + ", icono=" + icono + ", url=" + url + "]";
 	}
+	
 }
