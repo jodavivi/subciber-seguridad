@@ -20,8 +20,8 @@ import com.subciber.seguridad.client.api.EmailClient;
 import com.subciber.seguridad.client.dto.EmailRequestClientDto;
 import com.subciber.seguridad.client.dto.EmailResponseClientDto;
 import com.subciber.seguridad.client.util.ConfigUrlClient;
+import com.subciber.seguridad.client.util.MessageClientService;
 import com.subciber.seguridad.exception.ClientException;
-import com.subciber.seguridad.property.MessageClientService;
 
 /**
  * @author josep

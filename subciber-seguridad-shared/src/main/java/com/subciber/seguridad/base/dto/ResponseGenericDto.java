@@ -36,5 +36,11 @@ public class ResponseGenericDto<T> implements Serializable{
 	public void setObjectResponse(T objectResponse) {
 		this.objectResponse = objectResponse;
 	}
+
+	@Override
+	public String toString() {
+		return "ResponseGenericDto [auditResponse=" + auditResponse + ", objectResponse=" + objectResponse + "]";
+	}
+	
 	
 }

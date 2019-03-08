@@ -13,6 +13,34 @@ import javax.enterprise.context.Dependent;
 @Dependent
 public class MessageProvider {
 
+	@Property(value = "LOG.MESSAGE.INIT", resourceBundleBaseName = "com.subciber.seguridad.i18n.mensajes")
+	public String logMensajeInicio;
+	@Property(value = "LOG.MESSAGE.INPUT", resourceBundleBaseName = "com.subciber.seguridad.i18n.mensajes")
+	public String logMensajeInp;
+	@Property(value = "LOG.MESSAGE.SERVICE.INPUT", resourceBundleBaseName = "com.subciber.seguridad.i18n.mensajes")
+	public String logMensajeServicioInp;
+	@Property(value = "LOG.MESSAGE.DATA.INPUT", resourceBundleBaseName = "com.subciber.seguridad.i18n.mensajes")
+	public String logMensajeDataInp;
+	@Property(value = "LOG.MESSAGE.OUTPUT", resourceBundleBaseName = "com.subciber.seguridad.i18n.mensajes")
+	public String logMensajeOut;
+	@Property(value = "LOG.MESSAGE.SERVICE.OUTPUT", resourceBundleBaseName = "com.subciber.seguridad.i18n.mensajes")
+	public String logMensajeServiceOut;
+	@Property(value = "LOG.MESSAGE.SUCCESS", resourceBundleBaseName = "com.subciber.seguridad.i18n.mensajes")
+	public String logMensajeExito;
+	@Property(value = "LOG.MESSAGE.EXCEPTION", resourceBundleBaseName = "com.subciber.seguridad.i18n.mensajes")
+	public String logMensajeError;
+	@Property(value = "LOG.MESSAGE.TIME", resourceBundleBaseName = "com.subciber.seguridad.i18n.mensajes")
+	public String logMensajeTime;
+	@Property(value = "LOG.MESSAGE.END", resourceBundleBaseName = "com.subciber.seguridad.i18n.mensajes")
+	public String logMensajeEnd;
+	@Property(value = "LOG.MESSAGE.QUERY", resourceBundleBaseName = "com.subciber.seguridad.i18n.mensajes")
+	public String logMensajeQuery;
+	@Property(value = "LOG.MESSAGE.QUERY.SUCCESS", resourceBundleBaseName = "com.subciber.seguridad.i18n.mensajes")
+	public String logMensajeDataExito;
+	@Property(value = "LOG.MESSAGE.RESPONSE_NULL", resourceBundleBaseName = "com.subciber.seguridad.i18n.mensajes")
+	public String logMensajeNull;
+	
+	
 	@Property(value = "codigo.exito", resourceBundleBaseName = "com.subciber.seguridad.i18n.mensajes")
 	public Integer codigoExito;
 	

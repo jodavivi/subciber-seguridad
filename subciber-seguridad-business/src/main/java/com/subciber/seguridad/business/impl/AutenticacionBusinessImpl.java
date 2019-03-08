@@ -8,10 +8,15 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.subciber.seguridad.base.dto.RequestGenericDto;
 import com.subciber.seguridad.base.dto.ResponseGenericDto;
@@ -37,7 +42,7 @@ import com.subciber.seguridad.exception.BusinessException;
 import com.subciber.seguridad.exception.DaoException;
 import com.subciber.seguridad.property.MessageProvider;
 import com.subciber.seguridad.util.ConstantesConfig;
-import com.subciber.seguridad.util.EncriptacionAES;
+import com.subciber.seguridad.util.JAXBUtil;
 import com.subciber.seguridad.util.Utilitario;
 
 /**
@@ -49,6 +54,8 @@ import com.subciber.seguridad.util.Utilitario;
 @Dependent
 public class AutenticacionBusinessImpl implements AutenticacionBusiness, Serializable {
 
+	static final Logger logger = LoggerFactory.getLogger(AutenticacionBusinessImpl.class);
+	
 	@Inject
     private MessageProvider messageProvider;
 	@EJB
@@ -68,6 +75,8 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
 	private static final long serialVersionUID = 1L;
 	String clase = Thread.currentThread().getStackTrace()[1].getClassName();
 	String metodo = null;
+	long timeStart = 0;
+	String transactionId = null;
 	
 	/**
 	 * {@inheritDoc}
@@ -77,13 +86,19 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
 			throws BusinessException {
 		
 		ResponseGenericDto<InfoUsuarioDto> respuesta = null;
-		
+
 		try {
+			timeStart = System.currentTimeMillis();
+			transactionId = request.getAuditRequest().getTransaccionId();
 			metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+			logger.info(MessageFormat.format(messageProvider.logMensajeInicio, transactionId, metodo));
+			logger.info(MessageFormat.format(messageProvider.logMensajeInp, transactionId, metodo, JAXBUtil.log(request)));
+			
 			String convertClaveAes = utilitario.encriptarString(request.getObjectRequest().getClave());
 			respuesta = new ResponseGenericDto<InfoUsuarioDto>();
-			StringBuilder accesosList = new StringBuilder();
+			respuesta.getAuditResponse().setTransaccionId(request.getAuditRequest().getTransaccionId());
 			
+			StringBuilder accesosList = new StringBuilder();
 			//1. Validamos el usuario y la clave
 			AutenticacionFiltroDto filtroUsuario = new AutenticacionFiltroDto();
 			filtroUsuario.setUsuario(request.getObjectRequest().getUsuario());
@@ -166,51 +181,72 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
 			
 			respuesta.setObjectResponse(infoUsuarioDto);
 			
-			//4. Registramos la Session
 			LocalDateTime actual = LocalDateTime.now();
 			LocalDateTime actualSuma = actual.plusMinutes(ConstantesConfig.timeoutSession);
+			
+			//5.Generamos el token con los accesos encripatados
+ 
+			if(accesosList.length() > 0) {
+				accesosList.setLength(accesosList.length() - 2);
+			}
+			
+			String tokenGenerado = repositorioJwt.generarToken(request.getObjectRequest().getSession(), usuarioAutenticar.getId(), usuarioAutenticar.getCodigo(), usuarioAutenticar.getEmail(), accesosList.toString());
+			
+			//4. Registramos la Session
 			InfoJwt infoUsuario = new InfoJwt();
 			infoUsuario.setSession(request.getObjectRequest().getSession());
-			infoUsuario.setFechaInicioSession(actual);
-			infoUsuario.setFechaFinSession(actualSuma);
+			infoUsuario.setFechaInicioSession(actual.toString());
+			infoUsuario.setFechaFinSession(actualSuma.toString());
 			infoUsuario.setUsuario(request.getObjectRequest().getUsuario());
+			infoUsuario.setTokens(tokenGenerado.toString());
 			infoUsuario.setAccesosRecursos(infoUsuarioDto.getAccesosRecursos());
 			repositorioJwt.registrarUsuario(request.getObjectRequest().getSession(),infoUsuario);
 			
-			//5.Generamos el token con los accesos encripatados
-			StringBuilder sessionId = new StringBuilder();
-			sessionId.append(request.getObjectRequest().getSession());
-			//Estructura Token
-			//sessionId;IdUsuario;usuario,email;fechacreacion;fechaexpiracion;codigodeaccesos
-			StringBuilder accesos = new StringBuilder();
-			accesos.append(usuarioAutenticar.getId());
-			accesos.append(";");
-			accesos.append(usuarioAutenticar.getCodigo());
-			accesos.append(";");
-			accesos.append(usuarioAutenticar.getEmail());
-			accesos.append(";");
-			accesos.append(actual.toString());
-			accesos.append(";");
-			accesos.append(actualSuma.toString());
-			accesos.append(";");
-			accesos.append(accesosList);
-			if(accesosList.length() > 0) {
-				accesos.setLength(accesos.length() - 2);
+			//5. Activamos el depurador de sessiones
+			if(ConstantesConfig.activarDepurador) {
+				System.out.println("Depurador de Sessiones Activado");
+				depuradorSesisiones();
+				ConstantesConfig.activarDepurador = false;
 			}
-			String tokenEncriptado = EncriptacionAES.encrypt(accesos.toString(), ConstantesConfig.claveEncripacionAES);
-			StringBuilder token = new StringBuilder();
-			token.append(sessionId.toString());
-			token.append(";");
-			token.append(tokenEncriptado);
-			respuesta.getObjectResponse().getUsuario().setTokenUsuario(token.toString());
+			
+			respuesta.getObjectResponse().getUsuario().setTokenUsuario(tokenGenerado.toString());
 			respuesta.getAuditResponse().setCodigoRespuesta(messageProvider.codigoExito);
 			respuesta.getAuditResponse().setMensajeRespuesta(messageProvider.mensajeExito);
-		
+			
 		} catch (DaoException e) {
-			throw new  BusinessException(e.getCodigo(), e.getMensaje());
+			logger.error(MessageFormat.format(messageProvider.logMensajeError, transactionId, metodo, e.getMessage()));
+			respuesta.getAuditResponse().setCodigoRespuesta(e.getCodigo());
+			respuesta.getAuditResponse().setMensajeRespuesta(e.getMensaje());
 		} catch(Exception e) {
-			throw new  BusinessException(messageProvider.codigoErrorIdt2, MessageFormat.format(messageProvider.mensajeErrorIdt2, clase, metodo, e.getStackTrace()[0].getLineNumber(),  e.getMessage()));
+			logger.error(MessageFormat.format(messageProvider.logMensajeError, transactionId, metodo, e.getMessage()));
+			respuesta.getAuditResponse().setCodigoRespuesta(messageProvider.codigoErrorIdt2);
+			respuesta.getAuditResponse().setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt2, clase, metodo, e.getStackTrace()[0].getLineNumber(),  e.getMessage()));
+		}finally { 
+			logger.info(MessageFormat.format(messageProvider.logMensajeOut, transactionId, metodo, JAXBUtil.log(respuesta)));
+			logger.info(MessageFormat.format(messageProvider.logMensajeTime, transactionId,	metodo, (System.currentTimeMillis() - timeStart)));
+			logger.info(MessageFormat.format(messageProvider.logMensajeEnd, transactionId, metodo));
 		}
 		return respuesta;
 	}
+	
+	public void depuradorSesisiones() {
+		try {
+			Timer timer;
+			timer = new Timer();	
+			TimerTask task = new TimerTask() {
+				@Override
+				public void run() { 
+					try { 
+						repositorioJwt.depurarSesiones();
+					}catch(Exception e) {
+						System.out.println("Error al llamar la funcion de depurador de sessiones: " + e);
+					}
+				}
+			};
+			timer.schedule(task, 1000, 300000);
+		}catch(Exception e) {
+			System.out.println("Error en el timer de depurardor de sessiones: " + e);
+		}
+	}
+	
 }

@@ -1,4 +1,4 @@
-package com.subciber.seguridad.property;
+package com.subciber.seguridad.client.util;
 
 public class MessageClientService {
 	

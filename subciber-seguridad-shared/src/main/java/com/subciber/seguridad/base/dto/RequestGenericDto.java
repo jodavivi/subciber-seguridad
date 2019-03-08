@@ -35,5 +35,7 @@ public class RequestGenericDto<T> implements Serializable{
 	public void setObjectRequest(T objectRequest) {
 		this.objectRequest = objectRequest;
 	}
+	
+	
 
 }

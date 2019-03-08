@@ -21,7 +21,6 @@ import com.subciber.seguridad.base.dto.ResponseGenericDto;
 import com.subciber.seguridad.business.api.AutenticacionBusiness;
 import com.subciber.seguridad.dto.AutenticacionFiltroDto;
 import com.subciber.seguridad.dto.InfoUsuarioDto;
-import com.subciber.seguridad.exception.BusinessException;
 import com.subciber.seguridad.exception.GeneralException;
 import com.subciber.seguridad.property.MessageProvider;
 import com.subciber.seguridad.rest.api.AutenticacionRest;
@@ -69,13 +68,15 @@ public class AutenticacionRestImpl implements AutenticacionRest {
 			requestGenerarico.getObjectRequest().setSession(session);
 			ResponseGenericDto<InfoUsuarioDto> usuario = autenticacionBusiness.autenticarUsuario(requestGenerarico);
 			
-			response.setObjectResponse(usuario.getObjectResponse());
-			response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoExito);
-			response.getAuditResponse().setMensajeRespuesta(messageProvider.mensajeExito);
+			if(usuario.getAuditResponse().getCodigoRespuesta() == messageProvider.codigoExito) {
+				response.setObjectResponse(usuario.getObjectResponse());
+				response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoExito);
+				response.getAuditResponse().setMensajeRespuesta(messageProvider.mensajeExito);
+			}else {
+				response.getAuditResponse().setCodigoRespuesta(usuario.getAuditResponse().getCodigoRespuesta());
+				response.getAuditResponse().setMensajeRespuesta(usuario.getAuditResponse().getMensajeRespuesta());
+			}
 			
-		} catch (BusinessException e) {
-			response.getAuditResponse().setCodigoRespuesta(e.getCodigo());
-			response.getAuditResponse().setMensajeRespuesta(e.getMensaje());
 		} catch (GeneralException e) {
 			response.getAuditResponse().setCodigoRespuesta(e.getCodigo());
 			response.getAuditResponse().setMensajeRespuesta(e.getMensaje());

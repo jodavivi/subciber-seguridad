@@ -24,7 +24,6 @@ import com.subciber.seguridad.base.dto.ResponseGenericDto;
 import com.subciber.seguridad.business.api.UsuarioBusiness;
 import com.subciber.seguridad.dto.UsuarioActualizacionDto;
 import com.subciber.seguridad.dto.UsuarioDetalleDto;
-import com.subciber.seguridad.exception.BusinessException;
 import com.subciber.seguridad.exception.GeneralException;
 import com.subciber.seguridad.property.MessageProvider;
 import com.subciber.seguridad.rest.api.UsuarioRest;
@@ -37,7 +36,7 @@ import com.subciber.seguridad.util.Utilitario;
  * @update
  */
 @Path("/usuario")
-public class UsuarioRestImpl implements UsuarioRest{
+public class UsuarioRestImpl implements UsuarioRest {
 
 	@Inject
 	private MessageProvider messageProvider;
@@ -47,33 +46,38 @@ public class UsuarioRestImpl implements UsuarioRest{
 	private HttpHeaders httpHeaders;
 	@Context
 	private UriInfo uriInfo;
-	@Context 
+	@Context
 	private HttpServletRequest httpServletRequest;
 	@Inject
 	private UsuarioBusiness usuarioBusiness;
-	
+
 	String clase = Thread.currentThread().getStackTrace()[1].getClassName();
 	String metodo = null;
-	
+
 	@POST
 	@Path("/")
-	@Produces("application/json")	
+	@Produces("application/json")
 	@Override
 	public Response crearUsuario(UsuarioDetalleDto request) {
-	
+
 		ResponseGenericDto<UsuarioDetalleDto> response = new ResponseGenericDto<UsuarioDetalleDto>();
-		ResponseGenericDto<UsuarioDetalleDto>  crearUsuarioResponse = null;
+		ResponseGenericDto<UsuarioDetalleDto> crearUsuarioResponse = null;
 		RequestGenericDto<UsuarioDetalleDto> requestCrearUsuario = null;
 		try {
 			requestCrearUsuario = utilitario.generateRequest(request, httpHeaders, uriInfo);
 			response.getAuditResponse().setTransaccionId(requestCrearUsuario.getAuditRequest().getTransaccionId());
 			crearUsuarioResponse = usuarioBusiness.crearUsuario(requestCrearUsuario);
-			response.setObjectResponse(crearUsuarioResponse.getObjectResponse());
-			response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoExito);
-			response.getAuditResponse().setMensajeRespuesta(messageProvider.mensajeExito);
-		} catch (BusinessException e) {
-			response.getAuditResponse().setCodigoRespuesta(e.getCodigo());
-			response.getAuditResponse().setMensajeRespuesta(e.getMensaje());
+
+			if (crearUsuarioResponse.getAuditResponse().getCodigoRespuesta() == messageProvider.codigoExito) {
+				response.setObjectResponse(crearUsuarioResponse.getObjectResponse());
+				response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoExito);
+				response.getAuditResponse().setMensajeRespuesta(messageProvider.mensajeExito);
+			} else {
+				response.getAuditResponse()
+						.setCodigoRespuesta(crearUsuarioResponse.getAuditResponse().getCodigoRespuesta());
+				response.getAuditResponse()
+						.setMensajeRespuesta(crearUsuarioResponse.getAuditResponse().getMensajeRespuesta());
+			}
 		} catch (GeneralException e) {
 			response.getAuditResponse().setCodigoRespuesta(e.getCodigo());
 			response.getAuditResponse().setMensajeRespuesta(e.getMensaje());
@@ -81,20 +85,20 @@ public class UsuarioRestImpl implements UsuarioRest{
 			response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoErrorIdt3);
 			response.getAuditResponse().setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt3,
 					clase, metodo, e.getStackTrace()[0].getLineNumber(), e.getMessage()));
-		}  
+		}
 
 		return Response.status(200).entity(response).build();
 	}
 
 	@DELETE
 	@Path("/")
-	@Produces("application/json")	
+	@Produces("application/json")
 	@Override
 	public Response eliminarUsuario(EliminarObjetoDto request) {
-		
+
 		AuditResponseDto response = null;
 		RequestGenericDto<EliminarObjetoDto> requestCrearUsuario = null;
-		
+
 		try {
 			response = new AuditResponseDto();
 			requestCrearUsuario = utilitario.generateRequest(request, httpHeaders, uriInfo);
@@ -102,27 +106,33 @@ public class UsuarioRestImpl implements UsuarioRest{
 			AuditResponseDto responseEliminarUsuario = usuarioBusiness.eliminarUsuario(requestCrearUsuario);
 			response.setCodigoRespuesta(responseEliminarUsuario.getCodigoRespuesta());
 			response.setMensajeRespuesta(responseEliminarUsuario.getMensajeRespuesta());
-		} catch (BusinessException e) {
-			response.setCodigoRespuesta(e.getCodigo());
-			response.setMensajeRespuesta(e.getMensaje());
+
+			if (responseEliminarUsuario.getCodigoRespuesta() == messageProvider.codigoExito) {
+				response.setCodigoRespuesta(messageProvider.codigoExito);
+				response.setMensajeRespuesta(messageProvider.mensajeExito);
+			} else {
+				response.setCodigoRespuesta(responseEliminarUsuario.getCodigoRespuesta());
+				response.setMensajeRespuesta(responseEliminarUsuario.getMensajeRespuesta());
+			}
+
 		} catch (GeneralException e) {
 			response.setCodigoRespuesta(e.getCodigo());
 			response.setMensajeRespuesta(e.getMensaje());
 		} catch (Exception e) {
 			response.setCodigoRespuesta(messageProvider.codigoErrorIdt3);
-			response.setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt3,
-					clase, metodo, e.getStackTrace()[0].getLineNumber(), e.getMessage()));
-		}  
+			response.setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt3, clase, metodo,
+					e.getStackTrace()[0].getLineNumber(), e.getMessage()));
+		}
 
 		return Response.status(200).entity(response).build();
 	}
 
 	@PUT
 	@Path("/")
-	@Produces("application/json")	
+	@Produces("application/json")
 	@Override
 	public Response actualizarUsuario(UsuarioActualizacionDto request) {
-		
+
 		ResponseGenericDto<UsuarioActualizacionDto> response = new ResponseGenericDto<UsuarioActualizacionDto>();
 		AuditResponseDto actualizarUsuarioResponse = null;
 		RequestGenericDto<UsuarioActualizacionDto> requestActualizarUsuario = null;
@@ -130,11 +140,16 @@ public class UsuarioRestImpl implements UsuarioRest{
 			requestActualizarUsuario = utilitario.generateRequest(request, httpHeaders, uriInfo);
 			response.getAuditResponse().setTransaccionId(requestActualizarUsuario.getAuditRequest().getTransaccionId());
 			actualizarUsuarioResponse = usuarioBusiness.actualizarUsuario(requestActualizarUsuario);
-			response.getAuditResponse().setCodigoRespuesta(actualizarUsuarioResponse.getCodigoRespuesta());
-			response.getAuditResponse().setMensajeRespuesta(actualizarUsuarioResponse.getMensajeRespuesta());
-		} catch (BusinessException e) {
-			response.getAuditResponse().setCodigoRespuesta(e.getCodigo());
-			response.getAuditResponse().setMensajeRespuesta(e.getMensaje());
+			if (actualizarUsuarioResponse.getCodigoRespuesta() == messageProvider.codigoExito) {
+				response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoExito);
+				response.getAuditResponse().setMensajeRespuesta(messageProvider.mensajeExito);
+			} else {
+				response.getAuditResponse()
+						.setCodigoRespuesta(actualizarUsuarioResponse.getCodigoRespuesta());
+				response.getAuditResponse()
+						.setMensajeRespuesta(actualizarUsuarioResponse.getMensajeRespuesta());
+			}
+			
 		} catch (GeneralException e) {
 			response.getAuditResponse().setCodigoRespuesta(e.getCodigo());
 			response.getAuditResponse().setMensajeRespuesta(e.getMensaje());
@@ -142,7 +157,7 @@ public class UsuarioRestImpl implements UsuarioRest{
 			response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoErrorIdt3);
 			response.getAuditResponse().setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt3,
 					clase, metodo, e.getStackTrace()[0].getLineNumber(), e.getMessage()));
-		}  
+		}
 
 		return Response.status(200).entity(response).build();
 	}

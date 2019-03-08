@@ -18,8 +18,9 @@ public class InfoJwt implements Serializable{
 	
 	private String 			 session;
 	private String 			 usuario;
-	private LocalDateTime 	 fechaInicioSession;
-	private LocalDateTime 	 fechaFinSession;
+	private String			 tokens;
+	private String 			 fechaInicioSession;
+	private String 	 		 fechaFinSession;
 	private List<AccesosDto> accesosRecursos;
 
 	public InfoJwt() {
@@ -50,20 +51,28 @@ public class InfoJwt implements Serializable{
 		this.accesosRecursos = accesosRecursos;
 	}
 
-	public LocalDateTime getFechaInicioSession() {
+	public String getFechaInicioSession() {
 		return fechaInicioSession;
 	}
 
-	public void setFechaInicioSession(LocalDateTime fechaInicioSession) {
+	public void setFechaInicioSession(String fechaInicioSession) {
 		this.fechaInicioSession = fechaInicioSession;
 	}
 
-	public LocalDateTime getFechaFinSession() {
+	public String getFechaFinSession() {
 		return fechaFinSession;
 	}
 
-	public void setFechaFinSession(LocalDateTime fechaFinSession) {
+	public void setFechaFinSession(String fechaFinSession) {
 		this.fechaFinSession = fechaFinSession;
 	}
 
+	public String getTokens() {
+		return tokens;
+	}
+
+	public void setTokens(String tokens) {
+		this.tokens = tokens;
+	}
+	
 }

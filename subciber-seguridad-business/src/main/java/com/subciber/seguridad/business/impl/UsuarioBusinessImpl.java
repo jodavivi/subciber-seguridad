@@ -15,6 +15,9 @@ import javax.ejb.EJB;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.subciber.seguridad.base.dto.AuditResponseDto;
 import com.subciber.seguridad.base.dto.EliminarObjetoDto;
 import com.subciber.seguridad.base.dto.RequestGenericDto;
@@ -42,6 +45,7 @@ import com.subciber.seguridad.exception.BusinessException;
 import com.subciber.seguridad.exception.DaoException;
 import com.subciber.seguridad.property.MessageProvider;
 import com.subciber.seguridad.util.ConstantesConfig;
+import com.subciber.seguridad.util.JAXBUtil;
 import com.subciber.seguridad.util.SendHtmlEmail;
 import com.subciber.seguridad.util.Utilitario;
 
@@ -54,6 +58,7 @@ import com.subciber.seguridad.util.Utilitario;
 @Dependent
 public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 
+	static final Logger logger = LoggerFactory.getLogger(UsuarioBusinessImpl.class);
 	private static final long serialVersionUID = 1L;
 
 	@Inject
@@ -76,6 +81,8 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 	
 	String clase = Thread.currentThread().getStackTrace()[1].getClassName();
 	String metodo = null;
+	long timeStart = 0;
+	String transactionId = null;
 	
 	/**
 	 * {@inheritDoc}
@@ -86,7 +93,12 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 		
 		ResponseGenericDto<UsuarioDetalleDto> response = null;
 		try {
+			timeStart = System.currentTimeMillis();
+			transactionId = request.getAuditRequest().getTransaccionId();
 			metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+			logger.info(MessageFormat.format(messageProvider.logMensajeInicio, transactionId, metodo));
+			logger.info(MessageFormat.format(messageProvider.logMensajeInp, transactionId, metodo, JAXBUtil.log(request)));
+			
 			response = new ResponseGenericDto<>();
 			
 			//1. Verificamos si existe el usuario registrado
@@ -173,9 +185,17 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 			}
 	
 		} catch (DaoException e) {
-			throw new  BusinessException(e.getCodigo(), e.getMensaje());
+			logger.error(MessageFormat.format(messageProvider.logMensajeError, transactionId, metodo, e.getMessage()));
+			response.getAuditResponse().setCodigoRespuesta(e.getCodigo());
+			response.getAuditResponse().setMensajeRespuesta(e.getMensaje());
 		} catch (Exception e) {
-			throw new  BusinessException(messageProvider.codigoErrorIdt2, MessageFormat.format(messageProvider.mensajeErrorIdt2, clase, metodo, e.getStackTrace()[0].getLineNumber(),  e.getMessage()));
+			logger.error(MessageFormat.format(messageProvider.logMensajeError, transactionId, metodo, e.getMessage()));
+			response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoErrorIdt2);
+			response.getAuditResponse().setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt2, clase, metodo, e.getStackTrace()[0].getLineNumber(),  e.getMessage()));		
+		} finally { 
+			logger.info(MessageFormat.format(messageProvider.logMensajeOut, transactionId, metodo, JAXBUtil.log(response)));
+			logger.info(MessageFormat.format(messageProvider.logMensajeTime, transactionId,	metodo, (System.currentTimeMillis() - timeStart)));
+			logger.info(MessageFormat.format(messageProvider.logMensajeEnd, transactionId, metodo));
 		}
 		
 		return response;
@@ -201,7 +221,12 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 		
 		AuditResponseDto response = null;	
 		try {
+			timeStart = System.currentTimeMillis();
+			transactionId = request.getAuditRequest().getTransaccionId();
 			metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+			logger.info(MessageFormat.format(messageProvider.logMensajeInicio, transactionId, metodo));
+			logger.info(MessageFormat.format(messageProvider.logMensajeInp, transactionId, metodo, JAXBUtil.log(request)));
+			
 			response = new AuditResponseDto();
 			response.setTransaccionId(request.getAuditRequest().getTransaccionId());
 			for(Integer itemId : request.getObjectRequest().getItems()){
@@ -233,20 +258,34 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 			response.setMensajeRespuesta(messageProvider.mensajeExito);
 			
 		} catch (DaoException e) {
-			throw new  BusinessException(e.getCodigo(), e.getMensaje());
+			logger.error(MessageFormat.format(messageProvider.logMensajeError, transactionId, metodo, e.getMessage()));
+			response.setCodigoRespuesta(e.getCodigo());
+			response.setMensajeRespuesta(e.getMensaje());
 		} catch (Exception e) {
-			throw new  BusinessException(messageProvider.codigoErrorIdt2, MessageFormat.format(messageProvider.mensajeErrorIdt2, clase, metodo, e.getStackTrace()[0].getLineNumber(),  e.getMessage()));
+			logger.error(MessageFormat.format(messageProvider.logMensajeError, transactionId, metodo, e.getMessage()));
+			response.setCodigoRespuesta(messageProvider.codigoErrorIdt2);
+			response.setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt2, clase, metodo, e.getStackTrace()[0].getLineNumber(),  e.getMessage()));
+
+		} finally { 
+			logger.info(MessageFormat.format(messageProvider.logMensajeOut, transactionId, metodo, JAXBUtil.log(response)));
+			logger.info(MessageFormat.format(messageProvider.logMensajeTime, transactionId,	metodo, (System.currentTimeMillis() - timeStart)));
+			logger.info(MessageFormat.format(messageProvider.logMensajeEnd, transactionId, metodo));
 		}
 		
 		return response;
 	}
 
 	@Override
-	public AuditResponseDto actualizarUsuario(RequestGenericDto<UsuarioActualizacionDto> request) throws BusinessException {
-		
-		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+	public AuditResponseDto actualizarUsuario(RequestGenericDto<UsuarioActualizacionDto> request) throws BusinessException { 
+ 
 		AuditResponseDto response = null;	
 		try {
+			timeStart = System.currentTimeMillis();
+			transactionId = request.getAuditRequest().getTransaccionId();
+			metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+			logger.info(MessageFormat.format(messageProvider.logMensajeInicio, transactionId, metodo));
+			logger.info(MessageFormat.format(messageProvider.logMensajeInp, transactionId, metodo, JAXBUtil.log(request)));
+			
 			response = new AuditResponseDto();
 			response.setTransaccionId(request.getAuditRequest().getTransaccionId());
 			if(request.getObjectRequest().getDatosUsuario() != null) {
@@ -302,9 +341,17 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 			response.setMensajeRespuesta(messageProvider.mensajeExito);
 			
 		}catch (DaoException e) {
-			throw new  BusinessException(e.getCodigo(), e.getMensaje());
-		} catch (Exception e) {
-			throw new  BusinessException(messageProvider.codigoErrorIdt2, MessageFormat.format(messageProvider.mensajeErrorIdt2, clase, metodo, e.getStackTrace()[0].getLineNumber(),  e.getMessage()));
+			logger.error(MessageFormat.format(messageProvider.logMensajeError, transactionId, metodo, e.getMessage()));
+			response.setCodigoRespuesta(e.getCodigo());
+			response.setMensajeRespuesta(e.getMensaje());
+		} catch(Exception e) {
+			logger.error(MessageFormat.format(messageProvider.logMensajeError, transactionId, metodo, e.getMessage()));
+			response.setCodigoRespuesta(messageProvider.codigoErrorIdt2);
+			response.setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt2, clase, metodo, e.getStackTrace()[0].getLineNumber(),  e.getMessage()));
+		}finally { 
+			logger.info(MessageFormat.format(messageProvider.logMensajeOut, transactionId, metodo, JAXBUtil.log(response)));
+			logger.info(MessageFormat.format(messageProvider.logMensajeTime, transactionId,	metodo, (System.currentTimeMillis() - timeStart)));
+			logger.info(MessageFormat.format(messageProvider.logMensajeEnd, transactionId, metodo));
 		}
 		
 		return response;

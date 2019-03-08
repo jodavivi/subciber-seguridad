@@ -1,7 +1,6 @@
 package com.subciber.seguridad.rest.util;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,12 +37,12 @@ public class CORSFilter extends HttpFilter{
 
        HttpServletRequest request = (HttpServletRequest) servletRequest;
        String originUrl = request.getHeader("origin");
-       System.out.println("originUrl: " + originUrl);
        // Authorize (allow) all domains to consume the content
        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Origin", buscarUrlPermitida(originUrl));
        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Methods","GET, OPTIONS, HEAD, PUT, POST");
        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Max-Age", "3600");
-       ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Headers", "x-requested-with, X-Auth-Token, Content-Type, transaccionId, aplicacion, tokens, terminal");
+       ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Headers", "x-requested-with, X-Auth-Token, Content-Type, transaccionId, aplicacion, tokens, terminal, usuario, usuarioId");
+       ((HttpServletResponse) servletResponse).addHeader("Access-Control-Expose-Headers", "x-requested-with, X-Auth-Token, Content-Type, transaccionId, aplicacion, tokens, terminal, usuario, usuarioId");
 
        HttpServletResponse resp = (HttpServletResponse) servletResponse;
 

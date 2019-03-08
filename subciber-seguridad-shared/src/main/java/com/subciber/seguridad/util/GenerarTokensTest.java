@@ -17,8 +17,8 @@ public class GenerarTokensTest {
 		//sessionId;IdUsuario;usuario,email;fechacreacion;fechaexpiracion;codigodeaccesos
 		EncriptacionAES encriptador = new EncriptacionAES();
 		String session = "l4QEV0A8K8M4SzT9Dd8JhfEfBnZdsc2ZCeqfeGen";
-		String usuarioId="0";
-		String usuario="prueba";
+		String usuarioId="1";
+		String usuario="U000001";
 		String email="jodavivi@gmail.com";
 		String fechaCreacion = "2019-02-15T12:44:15.477";
 		String fechaExpiracion="2019-04-15T12:44:15.477";

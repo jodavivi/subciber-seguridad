@@ -20,6 +20,8 @@ import com.subciber.seguridad.entity.VAccesoComponente;
 import com.subciber.seguridad.exception.DaoException;
 import com.subciber.seguridad.property.MessageProvider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * @author jose david villanueva villalobos
  * @Creacion 12 feb. 2019
@@ -28,7 +30,9 @@ import com.subciber.seguridad.property.MessageProvider;
  */
 @Stateless
 public class AccesoRecursoUsuarioRxDaoImpl extends BaseJPADao<VAccesoComponente> implements AccesosRecursosUsuarioRxDao, Serializable {
-
+	
+	static final Logger logger = LoggerFactory.getLogger(AccesoRecursoUsuarioRxDaoImpl.class);
+	
 	@Inject
     private MessageProvider messageProvider;
 	
