@@ -13,41 +13,23 @@ public class VUsuarioDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
-	
 	private String apellido;
-
 	private Integer aplicacionId;
-
 	private String clave;
-
 	private String codigoAplicacion;
-
 	private String codigoUsuario;
-
 	private String email;
-
 	private String emailNotificacion;
-
 	private Integer estadoId;
-
 	private String estadoUsuario;
-	
 	private String imagen;
-
 	private String logo;
-
 	private String nombre;
-
 	private String numeroIdentificacion;
-
 	private String path;
-
 	private String razonSocial;
-
 	private String url;
-
 	private String usuario;
-
 	public VUsuarioDto() {
 	}
 

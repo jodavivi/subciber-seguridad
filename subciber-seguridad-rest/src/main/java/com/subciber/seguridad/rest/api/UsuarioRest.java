@@ -16,7 +16,21 @@ import com.subciber.seguridad.dto.UsuarioDetalleDto;
  * @update
  */
 public interface UsuarioRest {
+	
+	/**
+	 * @param metodo para buscar usuario
+	 * @return devuelve lista de usuarios  segun filtro
+	 * @throws 
+	 */
+	public abstract Response listarUsuario();
 
+	/**
+	 * @param metodo para ver el detalle del usuario
+	 * @return devuelve el detalle del usuario
+	 * @throws 
+	 */
+	public abstract Response usuarioDetalle();
+	
 	/**
 	 * @param metodo para crear usuario
 	 * @return devuelve informacion del usuario

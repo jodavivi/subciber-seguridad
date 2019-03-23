@@ -111,8 +111,6 @@ public class Utilitario {
 				throw new GeneralException(messageProvider.codigoErrorIdf3,
 						MessageFormat.format(messageProvider.mensajeErrorIdf3, "4"));
 			}
-			 System.out.println("usuario: "+httpHeaders.getHeaderString("usuario"));
-			 System.out.println("tokens: "+httpHeaders.getHeaderString("tokens"));
 			response.getAuditRequest().setAplicacion(httpHeaders.getHeaderString("aplicacion"));
 			response.getAuditRequest().setTerminal(httpHeaders.getHeaderString("terminal"));
 			response.getAuditRequest().setTransaccionId(httpHeaders.getHeaderString("transaccionId"));
@@ -219,5 +217,25 @@ public class Utilitario {
 		String saltStr = salt.toString();
 		return saltStr;
 
+	}
+	
+	public String validarStringIsNull(String valor) {
+	
+		String response = null;
+		if(valor != null) {
+			response = valor;
+		}
+		
+		return response;
+	}
+	
+	public Integer validarIntegerIsNull(String valor) {
+		
+		Integer response = null;
+		if(valor != null) {
+			response = Integer.valueOf(valor);
+		}
+		
+		return response;
 	}
 }

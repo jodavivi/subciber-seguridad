@@ -27,4 +27,11 @@ public interface UsuarioRxDao{
 	 */
 	public abstract List<VUsuario> consultarUsuario(UsuarioFiltroDto request) throws DaoException;
 	
+	/**
+	 * @param metodo para buscar usuario
+	 * @return devuelve lista de usuarios
+	 * @throws DaoException
+	 */
+	public abstract List<VUsuario> buscarUsuario(UsuarioFiltroDto request) throws DaoException;
+	
 }
