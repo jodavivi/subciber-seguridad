@@ -19,7 +19,7 @@ public class TestUtil {
 		
 		final String secretKey = "Peru12345678.";
 	     
-	    String originalString = "Peru123456.";
+	    String originalString = "APP00013";
 	    String encryptedString = EncriptacionAES.encrypt(originalString, secretKey) ;
 	    String decryptedString = EncriptacionAES.decrypt(encryptedString, secretKey) ;
 	     

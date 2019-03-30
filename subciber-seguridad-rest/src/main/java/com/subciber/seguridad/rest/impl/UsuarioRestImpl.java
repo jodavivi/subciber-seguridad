@@ -67,6 +67,7 @@ public class UsuarioRestImpl implements UsuarioRest {
 	@Override
 	public Response listarUsuario() {
 		//nombre=jodadad&usuario=jodad&estadoId=23&fechaCreacion=2019-03-02&correo=jodavivivi@hotmail.com
+		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
 		ResponseGenericDto<ResponseUsuarioDto> response = null;
 		RequestGenericDto<UsuarioFiltroDto> requestBuscarUsuario = null;
 		try {
@@ -100,6 +101,7 @@ public class UsuarioRestImpl implements UsuarioRest {
 	public Response usuarioDetalle() {
 		ResponseGenericDto<ResponseUsuarioDetalleDto> response = null;
 		RequestGenericDto<UsuarioFiltroDto> requestBuscarUsuario = null;
+		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
 		try {
 			response = new ResponseGenericDto<ResponseUsuarioDetalleDto>();
 			UsuarioFiltroDto requestUsuario = new UsuarioFiltroDto();
@@ -129,6 +131,7 @@ public class UsuarioRestImpl implements UsuarioRest {
 		ResponseGenericDto<UsuarioDetalleDto> response = new ResponseGenericDto<UsuarioDetalleDto>();
 		ResponseGenericDto<UsuarioDetalleDto> crearUsuarioResponse = null;
 		RequestGenericDto<UsuarioDetalleDto> requestCrearUsuario = null;
+		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
 		try {
 			requestCrearUsuario = utilitario.generateRequest(request, httpHeaders, uriInfo);
 			response.getAuditResponse().setTransaccionId(requestCrearUsuario.getAuditRequest().getTransaccionId());
@@ -164,7 +167,7 @@ public class UsuarioRestImpl implements UsuarioRest {
 
 		AuditResponseDto response = null;
 		RequestGenericDto<EliminarObjetoDto> requestCrearUsuario = null;
-
+		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
 		try {
 			response = new AuditResponseDto();
 			requestCrearUsuario = utilitario.generateRequest(request, httpHeaders, uriInfo);
@@ -198,7 +201,7 @@ public class UsuarioRestImpl implements UsuarioRest {
 	@Produces("application/json")
 	@Override
 	public Response actualizarUsuario(UsuarioActualizacionDto request) {
-
+		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
 		ResponseGenericDto<UsuarioActualizacionDto> response = new ResponseGenericDto<UsuarioActualizacionDto>();
 		AuditResponseDto actualizarUsuarioResponse = null;
 		RequestGenericDto<UsuarioActualizacionDto> requestActualizarUsuario = null;
