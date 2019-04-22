@@ -63,8 +63,10 @@ public class UsuarioDetalle implements Serializable {
 	
 	@Column(name="\"Imagen\"")
 	private String imagen;
-
-
+	
+	@Column(name="\"AfiliadoId\"")
+	private Integer afiliadoId;
+	
 	public UsuarioDetalle() {
 	}
 
@@ -172,13 +174,22 @@ public class UsuarioDetalle implements Serializable {
 		this.usuarioModificador = usuarioModificador;
 	}
 
+	public Integer getAfiliadoId() {
+		return afiliadoId;
+	}
+
+	public void setAfiliadoId(Integer afiliadoId) {
+		this.afiliadoId = afiliadoId;
+	}
+
 	@Override
 	public String toString() {
 		return "UsuarioDetalle [id=" + id + ", estadoId=" + estadoId + ", usuarioCreador=" + usuarioCreador
 				+ ", fechaCreacion=" + fechaCreacion + ", terminalCreacion=" + terminalCreacion
 				+ ", usuarioModificador=" + usuarioModificador + ", fechaModificacion=" + fechaModificacion
 				+ ", terminalModificador=" + terminalModificador + ", transaccionId=" + transaccionId + ", usuarioId="
-				+ usuarioId + ", nombre=" + nombre + ", apellido=" + apellido + ", imagen=" + imagen + "]";
+				+ usuarioId + ", nombre=" + nombre + ", apellido=" + apellido + ", imagen=" + imagen + ", afiliadoId="
+				+ afiliadoId + "]";
 	}
 
 }

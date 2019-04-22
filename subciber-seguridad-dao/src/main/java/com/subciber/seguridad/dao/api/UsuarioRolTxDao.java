@@ -5,7 +5,8 @@ package com.subciber.seguridad.dao.api;
 
 import javax.ejb.Local;
 
-import com.subciber.seguridad.base.dto.RequestGenericEliminarDto;
+import com.subciber.seguridad.base.dto.AuditResponseDto;
+import com.subciber.seguridad.base.dto.RequestGenericDto;
 import com.subciber.seguridad.dao.base.GenericaJPADao;
 import com.subciber.seguridad.entity.UsuarioRol;
 import com.subciber.seguridad.exception.DaoException;
@@ -24,6 +25,6 @@ public interface UsuarioRolTxDao extends GenericaJPADao<UsuarioRol>{
 	 * @return 
 	 * @throws DaoException
 	 */
-	public abstract void eliminarUsuarioRolxIdUsuario(RequestGenericEliminarDto request) throws DaoException;
+	public abstract AuditResponseDto eliminarUsuarioRolxIdUsuario(RequestGenericDto<Integer> request) throws DaoException;
 	
 }

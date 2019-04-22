@@ -57,7 +57,7 @@ public class UsuarioRolRxDaoImpl extends BaseJPADao<VUsuarioRol>  implements Usu
 			jpqlWhere.append("1 = 1 ");
 			if(request.getUsuarioId()!= null && request.getUsuarioId() != 0) {
 				jpqlWhere.append("and ");
-				jpqlWhere.append("u.id = :usuarioId ");
+				jpqlWhere.append("u.usuarioId = :usuarioId ");
 			}
 			
 			jpql = new StringBuilder();

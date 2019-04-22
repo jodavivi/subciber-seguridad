@@ -60,7 +60,7 @@ public interface RepositorioJwt {
 	 * @return devuelve el nuevo token generado
 	 * @throws 
 	 */
-	public String generarToken(String session, Integer usuarioId, String usuario, String email, String codigodeaccesos);
+	public String generarToken(String session, Integer usuarioId, String usuario, String email, String codigodeaccesos, String rol);
 	
 	/**
 	 * @param metodo para depurar sesiones 

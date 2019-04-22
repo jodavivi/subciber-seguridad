@@ -21,7 +21,7 @@ public class VUsuario implements Serializable {
 
 	@Id
 	@Column(name="\"Id\"")
-	private Integer id;
+	private Integer usuarioId;
 
 	@Column(name="\"EstadoId\"")
 	private Integer estadoId;
@@ -44,6 +44,9 @@ public class VUsuario implements Serializable {
 	@Column(name="\"AplicacionId\"")
 	private Integer aplicacionId;
 
+	@Column(name="\"UsuarioDetalleId\"")
+	private Integer usuarioDetalleId;
+	
 	@Column(name="\"Nombre\"")
 	private String nombre;
 
@@ -53,13 +56,14 @@ public class VUsuario implements Serializable {
 	public VUsuario() {
 	}
 
-	public Integer getId() {
-		return id;
+	public Integer getUsuarioId() {
+		return usuarioId;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setUsuarioId(Integer usuarioId) {
+		this.usuarioId = usuarioId;
 	}
+
 
 	public Integer getEstadoId() {
 		return estadoId;
@@ -133,11 +137,20 @@ public class VUsuario implements Serializable {
 		this.apellido = apellido;
 	}
 
+	public Integer getUsuarioDetalleId() {
+		return usuarioDetalleId;
+	}
+
+	public void setUsuarioDetalleId(Integer usuarioDetalleId) {
+		this.usuarioDetalleId = usuarioDetalleId;
+	}
+
 	@Override
 	public String toString() {
-		return "VUsuario [id=" + id + ", estadoId=" + estadoId + ", estado=" + estado + ", codigo=" + codigo
-				+ ", usuario=" + usuario + ", email=" + email + ", imagen=" + imagen + ", aplicacionId=" + aplicacionId
-				+ ", nombre=" + nombre + ", apellido=" + apellido + "]";
+		return "VUsuario [usuarioId=" + usuarioId + ", estadoId=" + estadoId + ", estado=" + estado + ", codigo="
+				+ codigo + ", usuario=" + usuario + ", email=" + email + ", imagen=" + imagen + ", aplicacionId="
+				+ aplicacionId + ", usuarioDetalleId=" + usuarioDetalleId + ", nombre=" + nombre + ", apellido="
+				+ apellido + "]";
 	}
 
 }

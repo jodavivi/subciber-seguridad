@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import com.subciber.seguridad.base.dto.AuditResponseDto;
 import com.subciber.seguridad.base.dto.EliminarObjetoDto;
 import com.subciber.seguridad.base.dto.RequestGenericDto;
-import com.subciber.seguridad.base.dto.RequestGenericEliminarDto;
 import com.subciber.seguridad.base.dto.ResponseGenericDto;
 import com.subciber.seguridad.business.api.UsuarioBusiness;
 import com.subciber.seguridad.business.util.ConfigBusiness;
@@ -35,7 +34,6 @@ import com.subciber.seguridad.dao.api.UsuarioTxDao;
 import com.subciber.seguridad.dao.util.ConfigDao;
 import com.subciber.seguridad.dto.UsuarioActualizacionDto;
 import com.subciber.seguridad.dto.UsuarioDetalleDto;
-import com.subciber.seguridad.dto.UsuarioDetalleFiltroDto;
 import com.subciber.seguridad.dto.UsuarioFiltroDto;
 import com.subciber.seguridad.entity.Usuario;
 import com.subciber.seguridad.entity.UsuarioDetalle;
@@ -116,6 +114,7 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 			
 			Usuario usuario = new Usuario();
 			Integer idUsuario = usuarioTxDao.obtenerId(ConfigDao.sequeciaTablaUsuario);
+			usuario.setId(idUsuario);
 			usuario.setEstadoId(ConstantesConfig.activo);
 			usuario.setUsuarioCreador(request.getAuditRequest().getUsuario());
 			usuario.setFechaCreacion(LocalDateTime.now());
@@ -125,7 +124,7 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 			usuario.setCodigo(codigoUsuario);
 			usuario.setUsuario(request.getObjectRequest().getUsuario());
 			usuario.setClave(claveNueva);
-			usuario.setEmail(request.getObjectRequest().getEmailUsuario());
+			usuario.setEmail(request.getObjectRequest().getEmail());
 			usuario.setAplicacionId(ConstantesConfig.aplicacionId);
 			
 			Usuario responseCrear = usuarioTxDao.crear(usuario);
@@ -138,10 +137,11 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 			usuarioDetalleRequest.setTerminalCreacion(request.getAuditRequest().getTerminal());
 			usuarioDetalleRequest.setNombre(request.getObjectRequest().getNombre());
 			usuarioDetalleRequest.setApellido(request.getObjectRequest().getApellido());
-			usuarioDetalleRequest.setUsuarioId(responseCrear.getId());
-			usuarioDetalleRequest.setImagen(request.getObjectRequest().getImagenUsuario());
+			usuarioDetalleRequest.setUsuarioId(idUsuario);
+			usuarioDetalleRequest.setImagen(request.getObjectRequest().getImagen());
+			usuarioDetalleRequest.setAfiliadoId(request.getObjectRequest().getAfiliadoId());
 			request.getObjectRequest().setUsuarioId(responseCrear.getId());
-			request.getObjectRequest().setCodigoUsuario(codigoUsuario);
+			request.getObjectRequest().setCodigo(codigoUsuario);
 			
 			usuarioDetalleTxDao.crear(usuarioDetalleRequest);
 			
@@ -167,7 +167,7 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 			requestEnvioCorreo.getAuditRequest().setSession(request.getAuditRequest().getSession());
 			
 			EmailRequestClientDto emailRequest = new EmailRequestClientDto();
-			emailRequest.setCorreoDestino(request.getObjectRequest().getEmailUsuario());
+			emailRequest.setCorreoDestino(request.getObjectRequest().getEmail());
 			emailRequest.setAsunto("Registro de Usuario");
 			String		html	= fileToString(SendHtmlEmail.class.getResourceAsStream(ConstantesConfig.plantillaRegistroUsuario), "utf-8");
 			emailRequest.setCuerpo(html.replace("{0}", request.getObjectRequest().getUsuario()).replace("{1}", claveNueva));
@@ -229,30 +229,24 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 			
 			response = new AuditResponseDto();
 			response.setTransaccionId(request.getAuditRequest().getTransaccionId());
-			for(Integer itemId : request.getObjectRequest().getItems()){
-				//1. Verificamos si existe el usuario
-				Usuario responseBuscarId = usuarioTxDao.buscarId(itemId);
-				if(responseBuscarId != null) {
-					responseBuscarId.setEstadoId(ConstantesConfig.eliminado);
-					responseBuscarId.setFechaCreacion(LocalDateTime.now());
-					responseBuscarId.setTerminalModificador(request.getAuditRequest().getTerminal());
-					responseBuscarId.setTransaccionId(request.getAuditRequest().getTransaccionId());
-					responseBuscarId.setUsuarioModificador(request.getAuditRequest().getUsuario());
-					//2. Eliminamos el usuario
-					usuarioTxDao.eliminar(responseBuscarId);
+			for(Integer itemId : request.getObjectRequest().getItems()){ 
+					//1. Eliminamos el usuario
+					RequestGenericDto<Integer> requestEliminar = new RequestGenericDto<>();	
+					requestEliminar.setAuditRequest(request.getAuditRequest());
+					requestEliminar.setObjectRequest(itemId);
+					usuarioTxDao.eliminarUsuarioxId(requestEliminar);
 					
 					//3. Eliminamos el detalle del usuario
-					RequestGenericEliminarDto requestEliminarDetalle = new RequestGenericEliminarDto(); 
+					RequestGenericDto<Integer> requestEliminarDetalle = new RequestGenericDto<Integer>(); 
 					requestEliminarDetalle.setAuditRequest(request.getAuditRequest());
-					requestEliminarDetalle.getId().add(responseBuscarId.getId());
+					requestEliminarDetalle.setObjectRequest(itemId);
 					usuarioDetalleTxDao.eliminarUsuarioDetallexIdUsuario(requestEliminarDetalle);
 					
 					//4. Eliminamos el rol del usuario
-					RequestGenericEliminarDto requestEliminarUsuarioRol = new RequestGenericEliminarDto(); 
+					RequestGenericDto<Integer> requestEliminarUsuarioRol = new RequestGenericDto<Integer>(); 
 					requestEliminarUsuarioRol.setAuditRequest(request.getAuditRequest());
-					requestEliminarUsuarioRol.getId().add(responseBuscarId.getId());
+					requestEliminarUsuarioRol.setObjectRequest(itemId);
 					usuarioRolTxDao.eliminarUsuarioRolxIdUsuario(requestEliminarUsuarioRol);
-				}
 			}
 			response.setCodigoRespuesta(messageProvider.codigoExito);
 			response.setMensajeRespuesta(messageProvider.mensajeExito);
@@ -290,43 +284,78 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 			response.setTransaccionId(request.getAuditRequest().getTransaccionId());
 			if(request.getObjectRequest().getDatosUsuario() != null) {
 				//1. Buscamos al usuario por el id
-				Usuario responseBuscarId = usuarioTxDao.buscarId(request.getObjectRequest().getDatosUsuario().getUsuarioId());
-				if(responseBuscarId != null) {
-					responseBuscarId.setUsuarioModificador(request.getAuditRequest().getUsuario());
-					responseBuscarId.setFechaModificacion(LocalDateTime.now());
-					responseBuscarId.setTerminalModificador(request.getAuditRequest().getTerminal());
-					responseBuscarId.setUsuario(request.getObjectRequest().getDatosUsuario().getUsuario());
-					responseBuscarId.setEmail(request.getObjectRequest().getDatosUsuario().getEmailUsuario());
-					usuarioTxDao.actualizar(responseBuscarId);
+				UsuarioFiltroDto  buscarUsuario = new UsuarioFiltroDto();
+				buscarUsuario.setUsuarioId(request.getObjectRequest().getDatosUsuario().getUsuarioId());
+				List<VUsuario> responseBuscarUsuario = usuarioRxDao.buscarUsuario(buscarUsuario);
+				if(responseBuscarUsuario != null && responseBuscarUsuario.size() == 1) {
+					
+					//2. Actualizamos la tabla usuario
+					Usuario responseUsuario = usuarioTxDao.buscarId(responseBuscarUsuario.get(0).getUsuarioId());
+					responseUsuario.setFechaModificacion(LocalDateTime.now());
+					responseUsuario.setTerminalModificador(request.getAuditRequest().getTerminal()); 
+					responseUsuario.setEstadoId(request.getObjectRequest().getDatosUsuario().getEstadoId());
+					if(request.getObjectRequest().getDatosUsuario().getUsuario() != null) {
+						responseUsuario.setUsuario(request.getObjectRequest().getDatosUsuario().getUsuario());
+					}
+					if(request.getObjectRequest().getDatosUsuario().getEmail() != null) {
+						responseUsuario.setEmail(request.getObjectRequest().getDatosUsuario().getEmail());
+					} 
+					usuarioTxDao.actualizar(responseUsuario);
+					
+					//3. Actualizamos el detalle
+					if(responseBuscarUsuario.get(0).getUsuarioDetalleId() != null) {
+						UsuarioDetalle consultarUsuarioDetalleResponse = usuarioDetalleTxDao.buscarId(responseBuscarUsuario.get(0).getUsuarioDetalleId());
+						consultarUsuarioDetalleResponse.setFechaModificacion(LocalDateTime.now());
+						consultarUsuarioDetalleResponse.setTerminalModificador(request.getAuditRequest().getTerminal());
+						consultarUsuarioDetalleResponse.setUsuarioModificador(request.getAuditRequest().getUsuario());
+						consultarUsuarioDetalleResponse.setEstadoId(request.getObjectRequest().getDatosUsuario().getEstadoId());
+						if(request.getObjectRequest().getDatosUsuario().getNombre() != null) {
+							consultarUsuarioDetalleResponse.setNombre(request.getObjectRequest().getDatosUsuario().getNombre());
+						}
+						if(request.getObjectRequest().getDatosUsuario().getApellido()!= null) {
+							consultarUsuarioDetalleResponse.setApellido(request.getObjectRequest().getDatosUsuario().getApellido());
+						}
+						
+						if(request.getObjectRequest().getDatosUsuario().getImagen()!= null) {
+							consultarUsuarioDetalleResponse.setImagen(request.getObjectRequest().getDatosUsuario().getImagen());
+						}
+						
+						usuarioDetalleTxDao.actualizar(consultarUsuarioDetalleResponse);
+					}else {
+						//4. Creamos el detalle
+						UsuarioDetalle usuarioDetalleRequest = new  UsuarioDetalle();
+						usuarioDetalleRequest.setFechaCreacion(LocalDateTime.now());
+						usuarioDetalleRequest.setTerminalCreacion(request.getAuditRequest().getTerminal());
+						usuarioDetalleRequest.setUsuarioCreador(request.getAuditRequest().getUsuario());
+						usuarioDetalleRequest.setEstadoId(request.getObjectRequest().getDatosUsuario().getEstadoId());
+						if(request.getObjectRequest().getDatosUsuario().getNombre() != null) {
+							usuarioDetalleRequest.setNombre(request.getObjectRequest().getDatosUsuario().getNombre());
+						}
+						if(request.getObjectRequest().getDatosUsuario().getApellido() != null) {
+							usuarioDetalleRequest.setApellido(request.getObjectRequest().getDatosUsuario().getApellido());
+						}
+						if(request.getObjectRequest().getDatosUsuario().getImagen() != null) {
+							usuarioDetalleRequest.setImagen(request.getObjectRequest().getDatosUsuario().getImagen());
+						}
+						usuarioDetalleRequest.setUsuarioId(responseBuscarUsuario.get(0).getUsuarioId());
+						usuarioDetalleTxDao.crear(usuarioDetalleRequest);
+					}
+					
 				}
 				
-				//2. consultamos el detalle
-				UsuarioDetalleFiltroDto usuarioDetalleInput = new UsuarioDetalleFiltroDto();
-				usuarioDetalleInput.setEstadoId(ConstantesConfig.activo);
-				usuarioDetalleInput.setUsuarioId(request.getObjectRequest().getDatosUsuario().getUsuarioId());
-				UsuarioDetalle consultarUsuarioDetalleResponse = usuarioDetalleRxDao.consultarUsuarioDetalle(usuarioDetalleInput);
-				//3. Actualizamos el detalle
-				if(consultarUsuarioDetalleResponse != null) {
-					consultarUsuarioDetalleResponse.setFechaModificacion(LocalDateTime.now());
-					consultarUsuarioDetalleResponse.setTerminalModificador(request.getAuditRequest().getTerminal());
-					consultarUsuarioDetalleResponse.setUsuarioModificador(request.getAuditRequest().getUsuario());
-					consultarUsuarioDetalleResponse.setNombre(request.getObjectRequest().getDatosUsuario().getNombre());
-					consultarUsuarioDetalleResponse.setApellido(request.getObjectRequest().getDatosUsuario().getApellido());
-					consultarUsuarioDetalleResponse.setImagen(request.getObjectRequest().getDatosUsuario().getImagenUsuario());
-					usuarioDetalleTxDao.actualizar(consultarUsuarioDetalleResponse);
-				}
 			}
 			
 			if(request.getObjectRequest().getRol()!= null) {
 				//4. eliminamos el usuarioRol
-				RequestGenericEliminarDto usuarioRolInput = new RequestGenericEliminarDto();
+				RequestGenericDto<Integer> usuarioRolInput = new RequestGenericDto<Integer>();
 				usuarioRolInput.setAuditRequest(request.getAuditRequest());
-				usuarioRolInput.getId().add(request.getObjectRequest().getDatosUsuario().getUsuarioId());
+				usuarioRolInput.setObjectRequest(request.getObjectRequest().getDatosUsuario().getUsuarioId());
 				usuarioRolTxDao.eliminarUsuarioRolxIdUsuario(usuarioRolInput);
 				
 				//5. registramos el rol
 				for(Integer rol : request.getObjectRequest().getRol()) {
 					UsuarioRol UsuarioRolInput = new UsuarioRol();
+					UsuarioRolInput.setId(usuarioRolTxDao.obtenerId(ConfigDao.sequeciaTablaUsuarioRol));
 					UsuarioRolInput.setEstadoId(ConstantesConfig.activo);
 					UsuarioRolInput.setFechaCreacion(LocalDateTime.now());
 					UsuarioRolInput.setTerminalCreacion(request.getAuditRequest().getTerminal());

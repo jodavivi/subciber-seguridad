@@ -30,7 +30,14 @@ public class GenerarTokensTest {
 		
 		String token = session+";" +encriptarDatos;
 
-		System.out.println(token);
+		//System.out.println(token);
+		
+		String demo = "";
+		
+		String[] de = demo.split("\\|");
+		for(String s : de) {
+			System.out.println(s);
+		}
 	}
 
 }

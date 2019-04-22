@@ -5,10 +5,13 @@ package com.subciber.seguridad.dto;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * @author josep
  *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UsuarioDetalleDto extends UsuarioDto implements Serializable{
 
 	private static final long serialVersionUID = 1L;

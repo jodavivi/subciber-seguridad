@@ -72,12 +72,14 @@ public abstract  class GenericaJPADaoImpl<T> extends BaseJPADao<T>  implements G
 	public T crear(T request) throws DaoException {
 		try {
 			metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
-			entityManager.persist(request);
+			entityManager.merge(request);
 			entityManager.flush();
 		}catch(PersistenceException e) {
 			  Throwable th = e.getCause();
+			  System.out.println(th);
 				  if(th.getCause() instanceof SQLException) {
 					  SQLException cause = (SQLException) th.getCause();
+					  System.out.println(cause);
 					  throw new DaoException(messageProvider.codigoErrorIdt1, MessageFormat.format(messageProvider.mensajeErrorIdt1, clase, metodo, e.getStackTrace()[0].getLineNumber(), tableName, cause.getMessage()));
 				  }
 			 

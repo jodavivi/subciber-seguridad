@@ -19,6 +19,7 @@ public class UsuarioFiltroDto implements Serializable{
 	private Integer estadoId;
 	private String nombre;
 	private String apellido;
+	private String usuarioDetalleId;
 	
 	public String getUsuario() {
 		return usuario;
@@ -55,6 +56,12 @@ public class UsuarioFiltroDto implements Serializable{
 	}
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
+	}
+	public String getUsuarioDetalleId() {
+		return usuarioDetalleId;
+	}
+	public void setUsuarioDetalleId(String usuarioDetalleId) {
+		this.usuarioDetalleId = usuarioDetalleId;
 	}
 	
 }

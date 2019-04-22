@@ -96,6 +96,7 @@ public class UsuarioRxBusinessImpl implements UsuarioRxBusiness, Serializable{
 			responseDetalle.setUsuario(responseconsultarUsuario.get(0));
 			//2. Consultamos los  roles
 			UsuarioFiltroDto requestRolUsuario = new UsuarioFiltroDto(); 
+			requestRolUsuario.setUsuarioId(request.getObjectRequest().getUsuarioId());
 			List<VUsuarioRol> consultarRolUsuarioResponse  =  usuarioRolRxDao.consultarRolUsuario(requestRolUsuario);
 			if(consultarRolUsuarioResponse != null && responseconsultarUsuario.size() > 0) {
 				responseDetalle.setRol(consultarRolUsuarioResponse);

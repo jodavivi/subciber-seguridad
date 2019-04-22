@@ -115,6 +115,7 @@ public class Utilitario {
 			response.getAuditRequest().setTerminal(httpHeaders.getHeaderString("terminal"));
 			response.getAuditRequest().setTransaccionId(httpHeaders.getHeaderString("transaccionId"));
 			response.getAuditRequest().setUsuario(httpHeaders.getHeaderString("usuario"));
+			response.getAuditRequest().setSession(httpHeaders.getHeaderString("tokens2"));
 			response.getAuditRequest().setUsuarioId(Integer.parseInt(httpHeaders.getHeaderString("usuarioId")));
 			response.setObjectRequest(object);
 

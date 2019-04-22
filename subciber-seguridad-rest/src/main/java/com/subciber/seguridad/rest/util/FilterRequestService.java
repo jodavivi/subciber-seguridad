@@ -35,9 +35,9 @@ public class FilterRequestService implements ContainerRequestFilter {
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		
-		String path = requestContext.getUriInfo().getPath();
-		String session = requestContext.getHeaderString("tokens");
-		boolean loggedIn = (session != null && session != "" && session.length() > 0);
+		String path 		= requestContext.getUriInfo().getPath();
+		String session 		= requestContext.getHeaderString("tokens");
+		boolean loggedIn 	= (session != null && session != "" && session.length() > 0);
 	    boolean allowedPath = ALLOWED_PATHS.contains(path);
 	    
 	    if (!allowedPath && loggedIn) {

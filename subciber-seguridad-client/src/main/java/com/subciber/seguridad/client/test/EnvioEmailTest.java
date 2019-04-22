@@ -23,10 +23,10 @@ public class EnvioEmailTest {
 		request.getAuditRequest().setTransaccionId("112121212");
 		request.getAuditRequest().setAplicacion("Test");
 		request.getAuditRequest().setTerminal("127.0.0.1");
-		request.getAuditRequest().setSession("l4QEV0A8K8M4SzT9Dd8JhfEfBnZdsc2ZCeqfeGen;24BLTX/SDrDY+Z1km0WskVyN3Kx3nIN0zWSO0qP1jKQEioXIj5iGRboBsb76keso481KLjXG4CQhUuQ/0tjNL5LwZJvYXU9OIbzMVLp42bPa2J9A20c453tG4/kyrhX+txC5vCrvguGqXUPDu34eVQ==");
+		request.getAuditRequest().setSession("3UWfa42g1oNJrvL96MCmWGY_8gE2XVTUfyPVq_Br;HfKvlGoAbRucdtJa6lDMEgZbOfxkrNY93kA7Pe9QdbFcdxr1WfZ7ilRg2fr4L6U0FNURtntLESKf7J828esVQUFLQAqesyXPMlME4CuGek+quNCJwVPShWuaxTlLCiB6GVy9r+e0VVZtDMebr7jjL8/qyD9klCE7UhjW8mTFDmMbfgnqJgkZqKucawpkZw9wJgeioJiH0UWDdd+PmAV/054qGV8VJ3B03oa7S3wGKNe2nybsvJaKrAhFnoh34ifiDuIl4akDIm5Tln9kxv7LR8ZTv2NacwBlwCWtWpZ0+Ov7nRqpsT6lSRivo9VeULeh1LA+6VKYXQJgHCrk6BfSRgL4GBtPdss1zkNd703WbyHbuEEn8rf+QWGqMgshmwE87gGdReUbsCeq2C8xwoXsmsKqxxpId5ohvXB4J1lXsKaKKqxgVeqFa6M2/PCpYmqbkuo9WHGqd0KGGR4uxhefnPzx1I59Ux4RyjZ5d6c64I4323LquiRYZGY51wdeLkdTbtITB3AK0Nc5wFi8ksSWczgPWOMZbn8ALrrHkL6Ny6269+vg+zZkoVQz3BIx/yUR");
 		
 		EmailRequestClientDto email = new EmailRequestClientDto();
-		email.setCorreoDestino("jodavivi@gmail.com");
+		email.setCorreoDestino("jorge12341@gmail.com");
 		email.setAsunto("Prueba");
 		email.setCuerpo("Prueba");
 		

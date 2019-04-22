@@ -8,9 +8,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -23,8 +21,6 @@ public class Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "seq_usuario", schema="\"Seguridad\"", sequenceName = "\"Usuario_Id_seq\"", allocationSize = 1)
-	@GeneratedValue(generator = "seq_usuario")
 	@Column(name="\"Id\"")
 	private Integer id;
 	

@@ -12,7 +12,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.Query;
 
-import com.subciber.seguridad.base.dto.RequestGenericEliminarDto;
+import com.subciber.seguridad.base.dto.AuditResponseDto;
+import com.subciber.seguridad.base.dto.RequestGenericDto;
 import com.subciber.seguridad.dao.api.UsuarioRolTxDao;
 import com.subciber.seguridad.dao.base.GenericaJPADaoImpl;
 import com.subciber.seguridad.entity.UsuarioRol;
@@ -37,14 +38,15 @@ public class UsuarioRolTxDaoImpl extends GenericaJPADaoImpl<UsuarioRol>  impleme
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void eliminarUsuarioRolxIdUsuario(RequestGenericEliminarDto request) throws DaoException {
+	public AuditResponseDto eliminarUsuarioRolxIdUsuario(RequestGenericDto<Integer> request) throws DaoException {
 		 
 		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
-		
+		AuditResponseDto response = new AuditResponseDto();
 		StringBuilder jpql 			= null;
 		StringBuilder jpqlSelect 	= null;
 		StringBuilder jpqlWhere  	= null;
 		try {
+			response.setTransaccionId(request.getAuditRequest().getTransaccionId());
 			jpqlSelect = new StringBuilder();
 			jpqlSelect.append("UPDATE ");
 			jpqlSelect.append(entityClass.getSimpleName());
@@ -70,9 +72,10 @@ public class UsuarioRolTxDaoImpl extends GenericaJPADaoImpl<UsuarioRol>  impleme
 			query.setParameter("transaccionId", request.getAuditRequest().getTransaccionId());
 			query.setParameter("usuarioModificador", request.getAuditRequest().getUsuario());
 			query.setParameter("estadoId", ConstantesConfig.activo);
-			query.setParameter("usuarioId", request.getId().get(0));
+			query.setParameter("usuarioId", request.getObjectRequest());
 			query.executeUpdate();
-			
+			response.setCodigoRespuesta(messageProvider.codigoExito);
+			response.setMensajeRespuesta(messageProvider.mensajeExito);
 		} catch (Exception e) {
 			String error = "";
 			 Throwable th = e.getCause();
@@ -80,8 +83,11 @@ public class UsuarioRolTxDaoImpl extends GenericaJPADaoImpl<UsuarioRol>  impleme
 				  SQLException cause = (SQLException) th.getCause();
 				  error =cause.getMessage();
 			  }
-			throw new DaoException(messageProvider.codigoErrorIdt1, MessageFormat.format(messageProvider.mensajeErrorIdt1, clase, metodo, e.getStackTrace()[0].getLineNumber(), tableName, error));
-		}
+			  response.setCodigoRespuesta(messageProvider.codigoErrorIdt1);
+			  response.setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt1, clase, metodo, e.getStackTrace()[0].getLineNumber(), tableName, error));
+			}
+			
+			return response;
 	}
 
 

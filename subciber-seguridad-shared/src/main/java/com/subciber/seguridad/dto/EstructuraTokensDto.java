@@ -22,6 +22,7 @@ public class EstructuraTokensDto implements Serializable{
 	private String fechaCreacion;
 	private String fechaExpiracion;
 	private String codigodeaccesos;
+	private String rol;
 	
 	public String getTokens() {
 		return tokens;
@@ -77,4 +78,11 @@ public class EstructuraTokensDto implements Serializable{
 	public void setNuevoTokens(String nuevoTokens) {
 		this.nuevoTokens = nuevoTokens;
 	}
+	public String getRol() {
+		return rol;
+	}
+	public void setRol(String rol) {
+		this.rol = rol;
+	}
+	
 }

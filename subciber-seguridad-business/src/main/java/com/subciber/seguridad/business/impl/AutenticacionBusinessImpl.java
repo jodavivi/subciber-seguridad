@@ -120,11 +120,18 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
 			
 			InfoUsuarioDto infoUsuarioDto = new InfoUsuarioDto(); 
 			infoUsuarioDto.getUsuario().setUsuario(consultarUsuarioResponse.get(0).getUsuario());
-			infoUsuarioDto.getUsuario().setEmailUsuario(consultarUsuarioResponse.get(0).getEmail());
+			infoUsuarioDto.getUsuario().setEmail(consultarUsuarioResponse.get(0).getEmail());
 			infoUsuarioDto.getUsuario().setApellido(consultarUsuarioResponse.get(0).getApellido());
-			infoUsuarioDto.getUsuario().setCodigoUsuario(consultarUsuarioResponse.get(0).getCodigo());
+			infoUsuarioDto.getUsuario().setCodigo(consultarUsuarioResponse.get(0).getCodigo());
 			infoUsuarioDto.getUsuario().setNombre(consultarUsuarioResponse.get(0).getNombre());
-			infoUsuarioDto.getUsuario().setImagenUsuario(consultarUsuarioResponse.get(0).getImagen());
+			infoUsuarioDto.getUsuario().setImagen(consultarUsuarioResponse.get(0).getImagen());
+			infoUsuarioDto.getUsuario().setEstadoId(usuarioAutenticar.getEstadoId());
+			String[] rolesUsuario = usuarioAutenticar.getRol().split("\\|");
+			List<Integer> listaRoles = new ArrayList<>();
+			for(String rolUser : rolesUsuario) {
+				listaRoles.add(Integer.valueOf(rolUser.trim())); 
+			}
+			infoUsuarioDto.getUsuario().setRol(listaRoles);
 			
 			//3. consultamos si tiene grupos y aplicaciones asignadas
 			AccesoFiltroDto filtroAcceso = new AccesoFiltroDto();
@@ -190,7 +197,7 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
 				accesosList.setLength(accesosList.length() - 2);
 			}
 			
-			String tokenGenerado = repositorioJwt.generarToken(request.getObjectRequest().getSession(), usuarioAutenticar.getId(), usuarioAutenticar.getCodigo(), usuarioAutenticar.getEmail(), accesosList.toString());
+			String tokenGenerado = repositorioJwt.generarToken(request.getObjectRequest().getSession(), usuarioAutenticar.getId(), usuarioAutenticar.getCodigo(), usuarioAutenticar.getEmail(), accesosList.toString(), usuarioAutenticar.getRol());
 			
 			//4. Registramos la Session
 			InfoJwt infoUsuario = new InfoJwt();

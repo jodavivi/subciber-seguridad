@@ -58,10 +58,10 @@ public class UsuarioDetalleRxDaoImpl extends BaseJPADao<UsuarioDetalle>  impleme
 				jpqlWhere.append("and ");
 				jpqlWhere.append("u.usuarioId = :usuarioId ");
 			}
-			if(request.getEstadoId()!= null && request.getEstadoId() != 0) {
-				jpqlWhere.append("and ");
-				jpqlWhere.append("u.estadoId = :estadoId ");
-			}
+//			if(request.getEstadoId()!= null && request.getEstadoId() != 0) {
+//				jpqlWhere.append("and ");
+//				jpqlWhere.append("u.estadoId = :estadoId ");
+//			}
 			
 			jpql = new StringBuilder();
 			jpql.append(jpqlSelect);
@@ -72,9 +72,9 @@ public class UsuarioDetalleRxDaoImpl extends BaseJPADao<UsuarioDetalle>  impleme
 			if(request.getUsuarioId()!= null && request.getUsuarioId() != 0) {
 				query.setParameter("usuarioId", request.getUsuarioId());
 			}
-			if(request.getEstadoId()!= null && request.getEstadoId() != 0) {
-				query.setParameter("estadoId", request.getEstadoId());
-			}
+//			if(request.getEstadoId()!= null && request.getEstadoId() != 0) {
+//				query.setParameter("estadoId", request.getEstadoId());
+//			}
 
 			resultado = query.getSingleResult();
 			

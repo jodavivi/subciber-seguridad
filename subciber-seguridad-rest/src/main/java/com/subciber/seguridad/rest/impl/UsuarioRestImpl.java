@@ -7,6 +7,7 @@ import java.text.MessageFormat;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -15,6 +16,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -124,6 +126,7 @@ public class UsuarioRestImpl implements UsuarioRest {
 	
 	@POST
 	@Path("/")
+	@Consumes("application/json")
 	@Produces("application/json")
 	@Override
 	public Response crearUsuario(UsuarioDetalleDto request) {
@@ -161,6 +164,7 @@ public class UsuarioRestImpl implements UsuarioRest {
 
 	@DELETE
 	@Path("/")
+	@Consumes("application/json")
 	@Produces("application/json")
 	@Override
 	public Response eliminarUsuario(EliminarObjetoDto request) {
@@ -198,6 +202,7 @@ public class UsuarioRestImpl implements UsuarioRest {
 
 	@PUT
 	@Path("/")
+	@Consumes({MediaType.APPLICATION_JSON,MediaType.TEXT_PLAIN })
 	@Produces("application/json")
 	@Override
 	public Response actualizarUsuario(UsuarioActualizacionDto request) {

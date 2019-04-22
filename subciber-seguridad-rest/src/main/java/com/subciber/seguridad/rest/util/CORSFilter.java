@@ -39,7 +39,7 @@ public class CORSFilter extends HttpFilter{
        String originUrl = request.getHeader("origin");
        // Authorize (allow) all domains to consume the content
        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Origin", buscarUrlPermitida(originUrl));
-       ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Methods","GET, OPTIONS, HEAD, PUT, POST");
+       ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Methods","GET, OPTIONS, HEAD, PUT, POST, DELETE");
        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Max-Age", "3600");
        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Headers", "x-requested-with, X-Auth-Token, Content-Type, transaccionId, aplicacion, tokens, terminal, usuario, usuarioId");
        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Expose-Headers", "x-requested-with, X-Auth-Token, Content-Type, transaccionId, aplicacion, tokens, terminal, usuario, usuarioId");

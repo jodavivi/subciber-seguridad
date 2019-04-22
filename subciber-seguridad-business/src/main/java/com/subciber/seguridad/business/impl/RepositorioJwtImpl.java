@@ -147,31 +147,40 @@ public class RepositorioJwtImpl implements RepositorioJwt, Serializable {
 			String usuarioId 						= datos[0];
 			String usuario	 						= datos[1];
 			String email 							= datos[2];
-			String codigodeaccesos 					= datos[5];
-			
+			String codigodeaccesos					= "";
+			String rol								= "";
+			try {
+				codigodeaccesos 					= datos[5];
+			}catch(Exception e){
+				codigodeaccesos						= "";
+			}
+			try {
+				rol									= datos[6];
+			}catch(Exception e){
+				rol									= "";
+			}
 			// 2. validamos si el token se encuentra vencido o falta configuración de
 			// accesos
 			if (fechaActual.compareTo(fechaSessionExpiracion) > 0) {
 				throw new BusinessException(messageProvider.codigoErrorIdf5,
 						MessageFormat.format(messageProvider.mensajeErrorIdf5, "Token Vencido"));
 			}
-			try {
-				String acceso = datos[5];
-				if (utilitario.isNullOrEmpty(acceso)) {
-					throw new BusinessException(messageProvider.codigoErrorIdf5,
-							MessageFormat.format(messageProvider.mensajeErrorIdf5, "Accesos no configurados"));
-				}
-			} catch (Exception e) {
-				throw new BusinessException(messageProvider.codigoErrorIdf5,
-						MessageFormat.format(messageProvider.mensajeErrorIdf5, "Accesos no configurados"));
-			}
-			
+//			try {
+//				String acceso = datos[5];
+//				if (utilitario.isNullOrEmpty(acceso)) {
+//					throw new BusinessException(messageProvider.codigoErrorIdf5,
+//							MessageFormat.format(messageProvider.mensajeErrorIdf5, "Accesos no configurados"));
+//				}
+//			} catch (Exception e) {
+//				throw new BusinessException(messageProvider.codigoErrorIdf5,
+//						MessageFormat.format(messageProvider.mensajeErrorIdf5, "Accesos no configurados"));
+//			}
 			
 			//3. Validamos que la session aun siga activa
 			recuperarUsuario(session);
 			
 			//4. Generamos el nuevo tokens 
-			String nuevoToken  = generarToken(session, Integer.parseInt(usuarioId), usuario, email, codigodeaccesos);
+			String nuevoToken  = generarToken(session, Integer.parseInt(usuarioId), usuario, email, codigodeaccesos, rol);
 			
 			EstructuraTokensDto estructura = new EstructuraTokensDto();
 			estructura.setCodigodeaccesos(codigodeaccesos);
@@ -183,6 +192,8 @@ public class RepositorioJwtImpl implements RepositorioJwt, Serializable {
 			estructura.setNuevoTokens(nuevoToken);
 			estructura.setUsuario(usuario);
 			estructura.setUsuarioId(Integer.parseInt(usuarioId));
+			estructura.setRol(rol);
+			
 			response.setObjectResponse(estructura);
 			response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoExito);
 			response.getAuditResponse().setMensajeRespuesta(messageProvider.mensajeExito);
@@ -198,7 +209,7 @@ public class RepositorioJwtImpl implements RepositorioJwt, Serializable {
 		return response;
 	}
 	
-	public String generarToken(String session, Integer usuarioId, String usuario, String email, String codigodeaccesos) {
+	public String generarToken(String session, Integer usuarioId, String usuario, String email, String codigodeaccesos, String rol) {
 		
 		String nuevoToken = "";
 		try {
@@ -208,7 +219,7 @@ public class RepositorioJwtImpl implements RepositorioJwt, Serializable {
 				StringBuilder sessionId = new StringBuilder();
 				sessionId.append(session);
 				//Estructura Token
-				//sessionId;IdUsuario;usuario,email;fechacreacion;fechaexpiracion;codigodeaccesos
+				//sessionId;IdUsuario;usuario,email;fechacreacion;fechaexpiracion;codigodeaccesos;rol
 				StringBuilder accesos = new StringBuilder();
 				accesos.append(usuarioId);
 				accesos.append(";");
@@ -221,6 +232,8 @@ public class RepositorioJwtImpl implements RepositorioJwt, Serializable {
 				accesos.append(actualSuma.toString());
 				accesos.append(";");
 				accesos.append(codigodeaccesos); 
+				accesos.append(";");
+				accesos.append(rol); 
 				String tokenEncriptado = EncriptacionAES.encrypt(accesos.toString(), ConstantesConfig.claveEncripacionAES);
 				StringBuilder token = new StringBuilder();
 				token.append(sessionId.toString());

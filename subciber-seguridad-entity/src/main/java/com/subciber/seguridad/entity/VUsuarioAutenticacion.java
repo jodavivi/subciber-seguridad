@@ -43,6 +43,9 @@ public class VUsuarioAutenticacion implements Serializable {
 
 	@Column(name="\"Clave\"")
 	private String clave;
+	
+	@Column(name="\"Rol\"")
+	private String rol;
 
 
 	public VUsuarioAutenticacion() {
@@ -123,10 +126,19 @@ public class VUsuarioAutenticacion implements Serializable {
 	}
 
 
+	public String getRol() {
+		return rol;
+	}
+
+	public void setRol(String rol) {
+		this.rol = rol;
+	}
+
 	@Override
 	public String toString() {
 		return "VUsuarioAutenticacion [id=" + id + ", estadoId=" + estadoId + ", estado=" + estado + ", codigo="
 				+ codigo + ", usuario=" + usuario + ", email=" + email + ", aplicacionId=" + aplicacionId + ", clave="
-				+ clave + "]";
+				+ clave + ", rol=" + rol + "]";
 	}
+
 }

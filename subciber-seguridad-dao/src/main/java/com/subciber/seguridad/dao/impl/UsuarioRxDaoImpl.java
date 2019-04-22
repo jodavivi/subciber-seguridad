@@ -70,6 +70,10 @@ public class UsuarioRxDaoImpl extends BaseJPADao<VUsuario>  implements UsuarioRx
 				jpqlWhere.append("and ");
 				jpqlWhere.append("u.usuario = :usuario ");
 			}
+			if(!utilitario.isNullOrEmpty(request.getUsuarioDetalleId())) {
+				jpqlWhere.append("and ");
+				jpqlWhere.append("u.usuarioDetalleId = :usuarioDetalleId ");
+			}
 			
 			jpql = new StringBuilder();
 			jpql.append(jpqlSelect);
@@ -86,7 +90,9 @@ public class UsuarioRxDaoImpl extends BaseJPADao<VUsuario>  implements UsuarioRx
 			if(!utilitario.isNullOrEmpty(request.getUsuario())) {
 				query.setParameter("usuario", request.getUsuario());
 			}
-
+			if(!utilitario.isNullOrEmpty(request.getUsuarioDetalleId())) {
+				query.setParameter("usuarioDetalleId", request.getUsuarioDetalleId());
+			}
 			resultado = query.getResultList();
 			
 		}catch (NoResultException e){
@@ -146,6 +152,7 @@ public class UsuarioRxDaoImpl extends BaseJPADao<VUsuario>  implements UsuarioRx
 				jpqlWhere.append(" LOWER(u.apellido) like :apellido ");
 			}
 			
+			jpqlWhere.append(" order by u.id desc");
 			jpql = new StringBuilder();
 			jpql.append(jpqlSelect);
 			jpql.append(jpqlWhere);
