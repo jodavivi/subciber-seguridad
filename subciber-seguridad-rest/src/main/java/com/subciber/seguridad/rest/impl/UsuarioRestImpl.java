@@ -4,6 +4,8 @@
 package com.subciber.seguridad.rest.impl;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -107,7 +109,7 @@ public class UsuarioRestImpl implements UsuarioRest {
 		try {
 			response = new ResponseGenericDto<ResponseUsuarioDetalleDto>();
 			UsuarioFiltroDto requestUsuario = new UsuarioFiltroDto();
-			System.out.println(uriInfo.getPathParameters().getFirst("usuarioId"));
+			
 			requestUsuario.setUsuarioId(utilitario.validarIntegerIsNull(uriInfo.getPathParameters().getFirst("usuarioId")));
 			requestBuscarUsuario = utilitario.generateRequest(requestUsuario, httpHeaders, uriInfo);
 			response.getAuditResponse().setTransaccionId(requestBuscarUsuario.getAuditRequest().getTransaccionId());
@@ -231,6 +233,54 @@ public class UsuarioRestImpl implements UsuarioRest {
 			response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoErrorIdt3);
 			response.getAuditResponse().setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt3,
 					clase, metodo, e.getStackTrace()[0].getLineNumber(), e.getMessage()));
+		}
+
+		return Response.status(200).entity(response).build();
+	}
+	
+	@DELETE
+	@Path("/query")
+	@Consumes("application/json")
+	@Produces("application/json")
+	@Override
+	public Response eliminarUsuarioPath() {
+
+		AuditResponseDto response 	= null;
+		EliminarObjetoDto request	= null;
+		RequestGenericDto<EliminarObjetoDto> requestCrearUsuario = null;
+		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+		try {
+			
+			response = new AuditResponseDto();
+			request = new EliminarObjetoDto();
+			
+			List<String> items = uriInfo.getQueryParameters().get("items");
+			List<Integer> itemsUsuario = new ArrayList<Integer>();
+			for(String i : items) {
+				itemsUsuario.add(Integer.valueOf(i));
+			}
+			request.setItems(itemsUsuario);
+			requestCrearUsuario = utilitario.generateRequest(request, httpHeaders, uriInfo);
+			response.setTransaccionId(requestCrearUsuario.getAuditRequest().getTransaccionId());
+			AuditResponseDto responseEliminarUsuario = usuarioBusiness.eliminarUsuario(requestCrearUsuario);
+			response.setCodigoRespuesta(responseEliminarUsuario.getCodigoRespuesta());
+			response.setMensajeRespuesta(responseEliminarUsuario.getMensajeRespuesta());
+
+			if (responseEliminarUsuario.getCodigoRespuesta() == messageProvider.codigoExito) {
+				response.setCodigoRespuesta(messageProvider.codigoExito);
+				response.setMensajeRespuesta(messageProvider.mensajeExito);
+			} else {
+				response.setCodigoRespuesta(responseEliminarUsuario.getCodigoRespuesta());
+				response.setMensajeRespuesta(responseEliminarUsuario.getMensajeRespuesta());
+			}
+
+		} catch (GeneralException e) {
+			response.setCodigoRespuesta(e.getCodigo());
+			response.setMensajeRespuesta(e.getMensaje());
+		} catch (Exception e) {
+			response.setCodigoRespuesta(messageProvider.codigoErrorIdt3);
+			response.setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt3, clase, metodo,
+					e.getStackTrace()[0].getLineNumber(), e.getMessage()));
 		}
 
 		return Response.status(200).entity(response).build();

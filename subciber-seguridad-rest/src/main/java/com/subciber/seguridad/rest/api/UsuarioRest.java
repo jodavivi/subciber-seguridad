@@ -51,4 +51,11 @@ public interface UsuarioRest {
 	 * @throws 
 	 */
 	public abstract Response actualizarUsuario(UsuarioActualizacionDto request);
+
+	/**
+	 * @param metodo para eliminar usuario por la url 
+	 * @return  
+	 * @throws 
+	 */
+	public abstract Response  eliminarUsuarioPath();
 }
