@@ -30,7 +30,7 @@ public class FilterRequestService implements ContainerRequestFilter {
     private MessageProvider messageProvider;
 	
 	private static final Set<String> ALLOWED_PATHS = Collections.unmodifiableSet(new HashSet<>(
-	        Arrays.asList("", "/autenticacion")));
+	        Arrays.asList("", "/autenticacion","/usuario/recuperarcuenta")));
 	
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {

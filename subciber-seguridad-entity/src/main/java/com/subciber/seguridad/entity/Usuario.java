@@ -62,6 +62,9 @@ public class Usuario implements Serializable {
 
 	@Column(name="\"AplicacionId\"")
 	private Integer aplicacionId;
+	
+	@Column(name="\"CambiarClave\"")
+	private Integer cambiarClave;
 
 	public Usuario() {
 	}
@@ -178,6 +181,14 @@ public class Usuario implements Serializable {
 		this.usuarioModificador = usuarioModificador;
 	}
 
+	public Integer getCambiarClave() {
+		return cambiarClave;
+	}
+
+	public void setCambiarClave(Integer cambiarClave) {
+		this.cambiarClave = cambiarClave;
+	}
+
 	@Override
 	public String toString() {
 		return "Usuario [id=" + id + ", estadoId=" + estadoId + ", usuarioCreador=" + usuarioCreador
@@ -185,7 +196,7 @@ public class Usuario implements Serializable {
 				+ ", usuarioModificador=" + usuarioModificador + ", fechaModificacion=" + fechaModificacion
 				+ ", terminalModificador=" + terminalModificador + ", transaccionId=" + transaccionId + ", codigo="
 				+ codigo + ", usuario=" + usuario + ", clave=" + clave + ", email=" + email + ", aplicacionId="
-				+ aplicacionId + "]";
+				+ aplicacionId + ", cambiarClave=" + cambiarClave + "]";
 	}
-
+ 
 }

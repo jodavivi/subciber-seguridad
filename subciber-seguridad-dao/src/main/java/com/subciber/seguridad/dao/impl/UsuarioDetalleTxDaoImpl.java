@@ -59,7 +59,7 @@ public class UsuarioDetalleTxDaoImpl extends GenericaJPADaoImpl<UsuarioDetalle>
 			
 			jpqlWhere = new StringBuilder();
 			jpqlWhere.append("WHERE ");
-			jpqlWhere.append("estadoId 		= :estadoId ");
+			jpqlWhere.append("estadoId 		!= :estadoId ");
 			jpqlWhere.append("and ");
 			jpqlWhere.append("usuarioId  	= :usuarioId ");
 			
@@ -71,7 +71,7 @@ public class UsuarioDetalleTxDaoImpl extends GenericaJPADaoImpl<UsuarioDetalle>
 			query.setParameter("terminalModificador", request.getAuditRequest().getTerminal());
 			query.setParameter("transaccionId", request.getAuditRequest().getTransaccionId());
 			query.setParameter("usuarioModificador", request.getAuditRequest().getUsuario());
-			query.setParameter("estadoId", ConstantesConfig.activo);
+			query.setParameter("estadoId", ConstantesConfig.eliminado);
 			query.setParameter("usuarioId", request.getObjectRequest());
 			query.executeUpdate();
 			response.setCodigoRespuesta(messageProvider.codigoExito);

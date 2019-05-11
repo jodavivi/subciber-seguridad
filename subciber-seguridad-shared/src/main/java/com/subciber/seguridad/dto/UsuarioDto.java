@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class UsuarioDto implements Serializable{
 
 	private static final long serialVersionUID = 1L;
+	private Integer usuarioId;
 	private String usuario;
 	private String codigo;
 	private String email;
@@ -26,6 +27,8 @@ public class UsuarioDto implements Serializable{
 	private String tokenUsuario;
 	private Integer estadoId;
 	private Integer afiliadoId;
+	private String codigoAfiliado;
+	private Integer cambiarClave;
 	private List<Integer> rol;
 	
 	public UsuarioDto() {
@@ -112,11 +115,36 @@ public class UsuarioDto implements Serializable{
 		this.afiliadoId = afiliadoId;
 	}
 
+	public Integer getCambiarClave() {
+		return cambiarClave;
+	}
+
+	public void setCambiarClave(Integer cambiarClave) {
+		this.cambiarClave = cambiarClave;
+	}
+
+	public Integer getUsuarioId() {
+		return usuarioId;
+	}
+
+	public void setUsuarioId(Integer usuarioId) {
+		this.usuarioId = usuarioId;
+	}
+
+	public String getCodigoAfiliado() {
+		return codigoAfiliado;
+	}
+
+	public void setCodigoAfiliado(String codigoAfiliado) {
+		this.codigoAfiliado = codigoAfiliado;
+	}
+
 	@Override
 	public String toString() {
-		return "UsuarioDto [usuario=" + usuario + ", codigo=" + codigo + ", email=" + email + ", imagen=" + imagen
-				+ ", nombre=" + nombre + ", apellido=" + apellido + ", tokenUsuario=" + tokenUsuario + ", estadoId="
-				+ estadoId + ", afiliadoId=" + afiliadoId + ", rol=" + rol + "]";
+		return "UsuarioDto [usuarioId=" + usuarioId + ", usuario=" + usuario + ", codigo=" + codigo + ", email=" + email
+				+ ", imagen=" + imagen + ", nombre=" + nombre + ", apellido=" + apellido + ", tokenUsuario="
+				+ tokenUsuario + ", estadoId=" + estadoId + ", afiliadoId=" + afiliadoId + ", codigoAfiliado="
+				+ codigoAfiliado + ", cambiarClave=" + cambiarClave + ", rol=" + rol + "]";
 	}
-	
+
 }

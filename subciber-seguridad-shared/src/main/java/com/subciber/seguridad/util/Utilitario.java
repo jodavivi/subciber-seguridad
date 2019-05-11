@@ -77,6 +77,7 @@ public class Utilitario {
 			response.getAuditRequest().setTerminal(httpHeaders.getHeaderString("terminal"));
 			response.getAuditRequest().setTransaccionId(httpHeaders.getHeaderString("transaccionId"));
 			response.getAuditRequest().setUsuario(httpHeaders.getHeaderString("tokens"));
+			response.getAuditRequest().setSession(httpHeaders.getHeaderString("tokens"));
 			response.setObjectRequest(object);
 
 		} catch (Exception e) {
@@ -175,7 +176,19 @@ public class Utilitario {
 		}
 		return response;
 	}
+	public String desencriptarString(String request) throws GeneralException {
+		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+		String response = null;
+		try {
+			response = encriptacionAES.decrypt(request, ConstantesConfig.claveEncripacionAES);
+		} catch (Exception e) {
+			throw new GeneralException(messageProvider.codigoErrorIdt4,
+					MessageFormat.format(messageProvider.mensajeErrorIdt4, clase, metodo,
+							e.getStackTrace()[0].getLineNumber(), e.getMessage()));
 
+		}
+		return response;
+	}
 	public List<String> quitarDuplicados(List<String> list) throws GeneralException {
 		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
 		List<String> result = new ArrayList<>();

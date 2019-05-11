@@ -240,7 +240,19 @@ public class RepositorioJwtImpl implements RepositorioJwt, Serializable {
 				token.append(";");
 				token.append(tokenEncriptado); 
 				
-				nuevoToken = token.toString();
+				nuevoToken = token.toString();  
+				
+				//Actualizamos la fecha de vencimiento del token
+				try {
+					InfoJwt user = logueadaos.get(session);
+					user.setFechaInicioSession(actual.toString());
+					user.setFechaFinSession(actualSuma.toString());
+					registrarUsuario(session, user);
+					
+				}catch(Exception e){
+					
+				}
+				
 			}catch(Exception e) {
 				nuevoToken = "";
 			}

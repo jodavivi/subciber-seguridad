@@ -75,6 +75,11 @@ public class UsuarioRxDaoImpl extends BaseJPADao<VUsuario>  implements UsuarioRx
 				jpqlWhere.append("u.usuarioDetalleId = :usuarioDetalleId ");
 			}
 			
+			if(!utilitario.isNullOrEmpty(request.getUsuario())) {
+				jpqlWhere.append("and ");
+				jpqlWhere.append("u.usuario = :usuario ");
+			}
+			
 			jpql = new StringBuilder();
 			jpql.append(jpqlSelect);
 			jpql.append(jpqlWhere);
@@ -92,6 +97,9 @@ public class UsuarioRxDaoImpl extends BaseJPADao<VUsuario>  implements UsuarioRx
 			}
 			if(!utilitario.isNullOrEmpty(request.getUsuarioDetalleId())) {
 				query.setParameter("usuarioDetalleId", request.getUsuarioDetalleId());
+			}
+			if(!utilitario.isNullOrEmpty(request.getUsuario())) {
+				query.setParameter("usuario", request.getUsuario());
 			}
 			resultado = query.getResultList();
 			

@@ -32,6 +32,8 @@ import com.subciber.seguridad.dao.api.UsuarioRolTxDao;
 import com.subciber.seguridad.dao.api.UsuarioRxDao;
 import com.subciber.seguridad.dao.api.UsuarioTxDao;
 import com.subciber.seguridad.dao.util.ConfigDao;
+import com.subciber.seguridad.dto.ClaveUsuarioDto;
+import com.subciber.seguridad.dto.RecuperarCuentaDto;
 import com.subciber.seguridad.dto.UsuarioActualizacionDto;
 import com.subciber.seguridad.dto.UsuarioDetalleDto;
 import com.subciber.seguridad.dto.UsuarioFiltroDto;
@@ -110,7 +112,8 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 			}
 			//2. Si no existe- creamos el usuario
 			
-			String claveNueva = utilitario.encriptarString(utilitario.generarString());
+			String claveGenerada = utilitario.generarString();
+			String claveNueva = utilitario.encriptarString(claveGenerada);
 			
 			Usuario usuario = new Usuario();
 			Integer idUsuario = usuarioTxDao.obtenerId(ConfigDao.sequeciaTablaUsuario);
@@ -126,6 +129,7 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 			usuario.setClave(claveNueva);
 			usuario.setEmail(request.getObjectRequest().getEmail());
 			usuario.setAplicacionId(ConstantesConfig.aplicacionId);
+			usuario.setCambiarClave(0);
 			
 			Usuario responseCrear = usuarioTxDao.crear(usuario);
 			
@@ -170,7 +174,7 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 			emailRequest.setCorreoDestino(request.getObjectRequest().getEmail());
 			emailRequest.setAsunto("Registro de Usuario");
 			String		html	= fileToString(SendHtmlEmail.class.getResourceAsStream(ConstantesConfig.plantillaRegistroUsuario), "utf-8");
-			emailRequest.setCuerpo(html.replace("{0}", request.getObjectRequest().getUsuario()).replace("{1}", claveNueva));
+			emailRequest.setCuerpo(html.replace("{0}", request.getObjectRequest().getUsuario()).replace("{1}", claveGenerada));
 			requestEnvioCorreo.setObjectRequest(emailRequest);
 			AuditResponseDto responseEnviarCorreo = emailClient.enviarCorreo(requestEnvioCorreo);
 			if(responseEnviarCorreo.getCodigoRespuesta() ==  messageProvider.codigoExito) {
@@ -384,5 +388,132 @@ public class UsuarioBusinessImpl implements UsuarioBusiness, Serializable{
 		}
 		
 		return response;
-	}	 
+	}
+
+	@Override
+	public AuditResponseDto actualizarClaveUsuario(RequestGenericDto<ClaveUsuarioDto> request)
+			throws BusinessException {
+		 
+		AuditResponseDto response = null;	
+		try {
+			timeStart = System.currentTimeMillis();
+			transactionId = request.getAuditRequest().getTransaccionId();
+			metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+			logger.info(MessageFormat.format(messageProvider.logMensajeInicio, transactionId, metodo));
+			logger.info(MessageFormat.format(messageProvider.logMensajeInp, transactionId, metodo, JAXBUtil.log(request)));
+			
+			response = new AuditResponseDto();
+			response.setTransaccionId(request.getAuditRequest().getTransaccionId());
+			
+			if(!request.getObjectRequest().getNuevaClave().equals(request.getObjectRequest().getRepetirNuevaClave())){
+				throw new DaoException(messageProvider.codigoErrorIdf8, messageProvider.mensajeErrorIdf8);
+			}
+			if(request.getObjectRequest().getNuevaClave().length() < 6){
+				throw new DaoException(messageProvider.codigoErrorIdf9, messageProvider.mensajeErrorIdf9);
+			}
+			
+			request.getObjectRequest().setUsuarioId(request.getAuditRequest().getUsuarioId());
+			String claveGenerada = request.getObjectRequest().getNuevaClave();
+			String claveNueva = utilitario.encriptarString(claveGenerada);
+			request.getObjectRequest().setNuevaClave(claveNueva);
+			AuditResponseDto actualizarClaveUsuarioResponse = usuarioTxDao.actualizarClaveUsuario(request);
+			if(actualizarClaveUsuarioResponse.getCodigoRespuesta() != messageProvider.codigoExito) {
+				throw new DaoException(actualizarClaveUsuarioResponse.getCodigoRespuesta(), actualizarClaveUsuarioResponse.getMensajeRespuesta());
+			}
+			
+			response.setCodigoRespuesta(messageProvider.codigoExito);
+			response.setMensajeRespuesta(messageProvider.mensajeExito);
+			
+		} catch (DaoException e) {
+			logger.error(MessageFormat.format(messageProvider.logMensajeError, transactionId, metodo, e.getMessage()));
+			response.setCodigoRespuesta(e.getCodigo());
+			response.setMensajeRespuesta(e.getMensaje());
+		} catch (Exception e) {
+			logger.error(MessageFormat.format(messageProvider.logMensajeError, transactionId, metodo, e.getMessage()));
+			response.setCodigoRespuesta(messageProvider.codigoErrorIdt2);
+			response.setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt2, clase, metodo, e.getStackTrace()[0].getLineNumber(),  e.getMessage()));
+
+		} finally { 
+			logger.info(MessageFormat.format(messageProvider.logMensajeOut, transactionId, metodo, JAXBUtil.log(response)));
+			logger.info(MessageFormat.format(messageProvider.logMensajeTime, transactionId,	metodo, (System.currentTimeMillis() - timeStart)));
+			logger.info(MessageFormat.format(messageProvider.logMensajeEnd, transactionId, metodo));
+		}
+		
+		return response;
+	}
+
+	@Override
+	public AuditResponseDto restaurarCuenta(RequestGenericDto<RecuperarCuentaDto> request) throws BusinessException {
+	 
+		AuditResponseDto  response = null;
+		try {
+			timeStart = System.currentTimeMillis();
+			transactionId = request.getAuditRequest().getTransaccionId();
+			metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+			logger.info(MessageFormat.format(messageProvider.logMensajeInicio, transactionId, metodo));
+			logger.info(MessageFormat.format(messageProvider.logMensajeInp, transactionId, metodo, JAXBUtil.log(request)));
+			
+			response = new AuditResponseDto();
+			response.setTransaccionId(request.getAuditRequest().getTransaccionId());
+			//1. Verificamos si existe el usuario registrado
+			UsuarioFiltroDto requestConsultarUsuario = new UsuarioFiltroDto(); 
+			requestConsultarUsuario.setEstadoId(ConstantesConfig.activo);
+			requestConsultarUsuario.setUsuario(request.getObjectRequest().getUsuario());
+			List<VUsuario>  responseconsultarUsuario = usuarioRxDao.consultarUsuario(requestConsultarUsuario);
+			
+			if(responseconsultarUsuario == null || responseconsultarUsuario.size() == 0) {
+				throw new  DaoException(messageProvider.codigoErrorIdf7, messageProvider.mensajeErrorIdf7);
+			}
+			//2. Si existe creamos  un clave temporal
+			LocalDateTime actual = LocalDateTime.now();
+			LocalDateTime actualSuma = actual.plusMinutes(ConstantesConfig.timeoutRecuperar);
+			StringBuilder claveTemporal = new StringBuilder();
+			claveTemporal.append("R");
+			claveTemporal.append("|");
+			claveTemporal.append(responseconsultarUsuario.get(0).getUsuarioId());
+			claveTemporal.append("|"); 
+			claveTemporal.append(actualSuma.toString());
+			 
+			String claveNueva = utilitario.encriptarString(claveTemporal.toString());
+			 
+			//5. Enviamos el correo de recuperar de cuenta de usuario
+			RequestGenericDto<EmailRequestClientDto> requestEnvioCorreo = new RequestGenericDto<>();
+			requestEnvioCorreo.getAuditRequest().setTransaccionId(request.getAuditRequest().getTransaccionId());
+			requestEnvioCorreo.getAuditRequest().setAplicacion(request.getAuditRequest().getAplicacion());
+			requestEnvioCorreo.getAuditRequest().setTerminal(request.getAuditRequest().getTerminal());
+			requestEnvioCorreo.getAuditRequest().setUsuario(request.getAuditRequest().getUsuario());
+			requestEnvioCorreo.getAuditRequest().setSession(request.getAuditRequest().getSession());
+			
+			EmailRequestClientDto emailRequest = new EmailRequestClientDto();
+			emailRequest.setCorreoDestino(responseconsultarUsuario.get(0).getEmail());
+			emailRequest.setAsunto("Recuperar Cuenta de Usuario");
+			String		html	= fileToString(SendHtmlEmail.class.getResourceAsStream(ConstantesConfig.plantillaRecuperarUsuario), "utf-8");
+			emailRequest.setCuerpo(html.replace("{0}", responseconsultarUsuario.get(0).getUsuario()).replace("{1}", claveNueva));
+			requestEnvioCorreo.setObjectRequest(emailRequest);
+			AuditResponseDto responseEnviarCorreo = emailClient.enviarCorreo(requestEnvioCorreo);
+			if(responseEnviarCorreo.getCodigoRespuesta() ==  messageProvider.codigoExito) { 
+				response.setCodigoRespuesta(messageProvider.codigoExito);
+				response.setMensajeRespuesta(messageProvider.mensajeExito);
+			} else { 
+				response.setCodigoRespuesta(responseEnviarCorreo.getCodigoRespuesta());
+				response.setMensajeRespuesta(responseEnviarCorreo.getMensajeRespuesta());
+			}
+	
+		} catch (DaoException e) {
+			logger.error(MessageFormat.format(messageProvider.logMensajeError, transactionId, metodo, e.getMessage()));
+			response.setCodigoRespuesta(e.getCodigo());
+			response.setMensajeRespuesta(e.getMensaje());
+		} catch (Exception e) {
+			logger.error(MessageFormat.format(messageProvider.logMensajeError, transactionId, metodo, e.getMessage()));
+			response.setCodigoRespuesta(messageProvider.codigoErrorIdt2);
+			response.setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt2, clase, metodo, e.getStackTrace()[0].getLineNumber(),  e.getMessage()));		
+		} finally { 
+			logger.info(MessageFormat.format(messageProvider.logMensajeOut, transactionId, metodo, JAXBUtil.log(response)));
+			logger.info(MessageFormat.format(messageProvider.logMensajeTime, transactionId,	metodo, (System.currentTimeMillis() - timeStart)));
+			logger.info(MessageFormat.format(messageProvider.logMensajeEnd, transactionId, metodo));
+		}
+		
+		return response;
+	}
+ 
 }

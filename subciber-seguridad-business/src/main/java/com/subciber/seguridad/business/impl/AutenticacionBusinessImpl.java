@@ -26,6 +26,7 @@ import com.subciber.seguridad.dao.api.AccesosRecursosUsuarioRxDao;
 import com.subciber.seguridad.dao.api.AccesosUsuarioRxDao;
 import com.subciber.seguridad.dao.api.AutenticacionRxDao;
 import com.subciber.seguridad.dao.api.UsuarioRxDao;
+import com.subciber.seguridad.dao.api.UsuarioTxDao;
 import com.subciber.seguridad.dto.AccesoFiltroDto;
 import com.subciber.seguridad.dto.AccesosDto;
 import com.subciber.seguridad.dto.AutenticacionFiltroDto;
@@ -34,6 +35,7 @@ import com.subciber.seguridad.dto.InfoUsuarioDto;
 import com.subciber.seguridad.dto.UsuarioAplicacionDto;
 import com.subciber.seguridad.dto.UsuarioFiltroDto;
 import com.subciber.seguridad.dto.UsuarioGrupoDto;
+import com.subciber.seguridad.entity.Usuario;
 import com.subciber.seguridad.entity.VAccesoComponente;
 import com.subciber.seguridad.entity.VAccesoGrupoAplicacion;
 import com.subciber.seguridad.entity.VUsuario;
@@ -62,6 +64,8 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
     private AutenticacionRxDao autenticacionDao;
 	@EJB
     private UsuarioRxDao usuarioRxDao;
+	@EJB
+    private UsuarioTxDao usuarioTxDao;
 	@EJB
 	private AccesosUsuarioRxDao accesosUsuarioDao;
 	@EJB
@@ -94,7 +98,34 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
 			logger.info(MessageFormat.format(messageProvider.logMensajeInicio, transactionId, metodo));
 			logger.info(MessageFormat.format(messageProvider.logMensajeInp, transactionId, metodo, JAXBUtil.log(request)));
 			
-			String convertClaveAes = utilitario.encriptarString(request.getObjectRequest().getClave());
+			Integer usuarioId  			= 0; 
+			String clave 				= request.getObjectRequest().getClave();
+			String convertClaveAes		= "";
+			try {
+				convertClaveAes = utilitario.encriptarString(clave);
+				String claveDescriptada = utilitario.desencriptarString(request.getObjectRequest().getClave());
+				String[] campos = claveDescriptada.split("\\|");
+				
+				LocalDateTime fechaActual 				= LocalDateTime.now();
+				LocalDateTime fechaSessionExpiracion 	= LocalDateTime.parse(campos[2]);
+				
+				if(campos[0].equals("R")) {
+					if (fechaActual.compareTo(fechaSessionExpiracion) > 0) {
+						throw new BusinessException(messageProvider.codigoErrorIdf10,
+								messageProvider.mensajeErrorIdf10);
+					}else {
+						convertClaveAes = claveDescriptada;
+						usuarioId  = Integer.valueOf(campos[1]);
+						Usuario user = usuarioTxDao.buscarId(usuarioId);
+						user.setClave(claveDescriptada);
+						user.setCambiarClave(0); 
+						usuarioTxDao.actualizar(user); 
+					}
+				} 
+			}catch(Exception e) {
+				
+			}
+			 
 			respuesta = new ResponseGenericDto<InfoUsuarioDto>();
 			respuesta.getAuditResponse().setTransaccionId(request.getAuditRequest().getTransaccionId());
 			
@@ -108,7 +139,7 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
 				throw new  BusinessException(messageProvider.codigoErrorIdf4, MessageFormat.format(messageProvider.mensajeErrorIdf4,"Usuario"));
 			}
 			
-			//2. Obtenemos la informacion del usuairo
+			//2. Obtenemos la informacion del usuario
 			UsuarioFiltroDto consultarUsuarioRequest = new UsuarioFiltroDto();
 			consultarUsuarioRequest.setUsuarioId(usuarioAutenticar.getId());
 			consultarUsuarioRequest.setEstadoId(23);
@@ -119,6 +150,7 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
 			}
 			
 			InfoUsuarioDto infoUsuarioDto = new InfoUsuarioDto(); 
+			infoUsuarioDto.getUsuario().setUsuarioId(consultarUsuarioResponse.get(0).getUsuarioId());
 			infoUsuarioDto.getUsuario().setUsuario(consultarUsuarioResponse.get(0).getUsuario());
 			infoUsuarioDto.getUsuario().setEmail(consultarUsuarioResponse.get(0).getEmail());
 			infoUsuarioDto.getUsuario().setApellido(consultarUsuarioResponse.get(0).getApellido());
@@ -126,6 +158,9 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
 			infoUsuarioDto.getUsuario().setNombre(consultarUsuarioResponse.get(0).getNombre());
 			infoUsuarioDto.getUsuario().setImagen(consultarUsuarioResponse.get(0).getImagen());
 			infoUsuarioDto.getUsuario().setEstadoId(usuarioAutenticar.getEstadoId());
+			infoUsuarioDto.getUsuario().setCambiarClave(consultarUsuarioResponse.get(0).getCambiarClave());
+			infoUsuarioDto.getUsuario().setAfiliadoId(consultarUsuarioResponse.get(0).getAfiliadoId());
+			infoUsuarioDto.getUsuario().setCodigoAfiliado(consultarUsuarioResponse.get(0).getCodigoAfiliado());
 			String[] rolesUsuario = usuarioAutenticar.getRol().split("\\|");
 			List<Integer> listaRoles = new ArrayList<>();
 			for(String rolUser : rolesUsuario) {

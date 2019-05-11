@@ -23,10 +23,11 @@ public interface UsuarioRxBusiness {
 	public abstract ResponseGenericDto<ResponseUsuarioDto> buscarUsuario(RequestGenericDto<UsuarioFiltroDto> request) throws BusinessException;
 
 	/**
-	 * @param metodo para consultar el detalle de usuario
+	 * @param metodo para consultar información del usuario
 	 * @return devuelve informacion del usuario
 	 * @throws BusinessException
 	 */
 	public abstract ResponseGenericDto<ResponseUsuarioDetalleDto> buscarUsuarioDetalle(RequestGenericDto<UsuarioFiltroDto> request) throws BusinessException;
 
+ 
 }

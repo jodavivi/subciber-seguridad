@@ -30,6 +30,8 @@ import com.subciber.seguridad.business.api.UsuarioBusiness;
 import com.subciber.seguridad.business.api.UsuarioRxBusiness;
 import com.subciber.seguridad.business.dto.ResponseUsuarioDetalleDto;
 import com.subciber.seguridad.dao.dto.ResponseUsuarioDto;
+import com.subciber.seguridad.dto.ClaveUsuarioDto;
+import com.subciber.seguridad.dto.RecuperarCuentaDto;
 import com.subciber.seguridad.dto.UsuarioActualizacionDto;
 import com.subciber.seguridad.dto.UsuarioDetalleDto;
 import com.subciber.seguridad.dto.UsuarioFiltroDto;
@@ -286,4 +288,89 @@ public class UsuarioRestImpl implements UsuarioRest {
 		return Response.status(200).entity(response).build();
 	}
 
+	@PUT
+	@Path("/actualizarClave")
+	@Consumes({MediaType.APPLICATION_JSON,MediaType.TEXT_PLAIN })
+	@Produces("application/json")
+	@Override
+	public Response actualizarClaveUsuario(ClaveUsuarioDto request) {
+		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+		AuditResponseDto response = null;
+		RequestGenericDto<ClaveUsuarioDto> requestActualizarUsuario = null;
+		try {
+			response = new AuditResponseDto();
+			requestActualizarUsuario = utilitario.generateRequest(request, httpHeaders, uriInfo); 
+			response = usuarioBusiness.actualizarClaveUsuario(requestActualizarUsuario);
+			  
+		} catch (GeneralException e) {
+			response.setCodigoRespuesta(e.getCodigo());
+			response.setMensajeRespuesta(e.getMensaje());
+		} catch (Exception e) {
+			response.setCodigoRespuesta(messageProvider.codigoErrorIdt3);
+			response.setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt3,
+					clase, metodo, e.getStackTrace()[0].getLineNumber(), e.getMessage()));
+		}
+
+		return Response.status(200).entity(response).build();
+	}
+
+	@POST
+	@Path("/recuperarcuenta")
+	@Consumes({MediaType.APPLICATION_JSON,MediaType.TEXT_PLAIN })
+	@Produces("application/json")
+	@Override
+	public Response recuperarCuenta(RecuperarCuentaDto request) {
+		 
+		AuditResponseDto response = new AuditResponseDto();
+		AuditResponseDto recuperarCuentaResponse = null;
+		RequestGenericDto<RecuperarCuentaDto> requestRecuperar = null;
+		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+		try {
+			requestRecuperar = utilitario.generateRequestAunteticar(request, httpHeaders, uriInfo);
+			response.setTransaccionId(requestRecuperar.getAuditRequest().getTransaccionId());
+			recuperarCuentaResponse = usuarioBusiness.restaurarCuenta(requestRecuperar);
+			
+			response.setCodigoRespuesta(messageProvider.codigoExito);
+			response.setMensajeRespuesta(messageProvider.mensajeExito);
+			 
+		} catch (GeneralException e) {
+			response.setCodigoRespuesta(e.getCodigo());
+			response.setMensajeRespuesta(e.getMensaje());
+		} catch (Exception e) {
+			response.setCodigoRespuesta(messageProvider.codigoErrorIdt3);
+			response.setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt3,
+					clase, metodo, e.getStackTrace()[0].getLineNumber(), e.getMessage()));
+		}
+
+		return Response.status(200).entity(response).build();
+	}
+
+	@GET
+	@Path("/perfil")
+	@Produces("application/json")
+	@Override
+	public Response usuarioPerfil() {
+		
+		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+		ResponseGenericDto<ResponseUsuarioDto> response = null;
+		RequestGenericDto<UsuarioFiltroDto> requestBuscarUsuario = null;
+		try {
+			response = new ResponseGenericDto<ResponseUsuarioDto>();
+			UsuarioFiltroDto requestUsuario = new UsuarioFiltroDto();
+			
+			requestBuscarUsuario = utilitario.generateRequest(requestUsuario, httpHeaders, uriInfo);
+			response.getAuditResponse().setTransaccionId(requestBuscarUsuario.getAuditRequest().getTransaccionId()); 
+			requestBuscarUsuario.getObjectRequest().setUsuarioId(requestBuscarUsuario.getAuditRequest().getUsuarioId());
+			response = usuarioRxBusiness.buscarUsuario(requestBuscarUsuario);
+			 
+		} catch (GeneralException e) {
+			response.getAuditResponse().setCodigoRespuesta(e.getCodigo());
+			response.getAuditResponse().setMensajeRespuesta(e.getMensaje());
+		} catch (Exception e) {
+			response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoErrorIdt3);
+			response.getAuditResponse().setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt3,
+					clase, metodo, e.getStackTrace()[0].getLineNumber(), e.getMessage()));
+		}
+		return Response.status(200).entity(response).build();
+	} 
 }

@@ -8,6 +8,7 @@ import javax.ejb.Local;
 import com.subciber.seguridad.base.dto.AuditResponseDto;
 import com.subciber.seguridad.base.dto.RequestGenericDto;
 import com.subciber.seguridad.dao.base.GenericaJPADao;
+import com.subciber.seguridad.dto.ClaveUsuarioDto;
 import com.subciber.seguridad.entity.Usuario;
 import com.subciber.seguridad.exception.DaoException;
 
@@ -20,6 +21,7 @@ import com.subciber.seguridad.exception.DaoException;
 @Local
 public interface UsuarioTxDao extends GenericaJPADao<Usuario>{
 
+	public abstract AuditResponseDto actualizarClaveUsuario(RequestGenericDto<ClaveUsuarioDto> request) throws DaoException;
 	public abstract AuditResponseDto eliminarUsuarioxId(RequestGenericDto<Integer> request) throws DaoException;
 	
 }
