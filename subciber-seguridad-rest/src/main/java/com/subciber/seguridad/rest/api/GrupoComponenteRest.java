@@ -6,6 +6,7 @@ package com.subciber.seguridad.rest.api;
 import javax.ws.rs.core.Response;
 
 import com.subciber.seguridad.dto.GrupoComponenteDto;
+import com.subciber.seguridad.dto.GrupoComponenteRequestDto;
 import com.subciber.seguridad.dto.RequestDeleteObjectDto;
 
 /**
@@ -24,18 +25,26 @@ public interface GrupoComponenteRest {
 	public abstract Response consultarGrupoComponente();
 	
 	/**
+	 * @param metodo para consultar los  componentes faltantes por grupo
+	 * @return devuelve informacion de los componentes faltantes
+	 * @throws 
+	 */
+	public abstract Response consultarGrupoComponentFaltante();
+	
+	/**
 	 * @param metodo para consultar los  componentes por grupo
 	 * @return devuelve informacion de los componentes
 	 * @throws 
 	 */
 	public abstract Response consultarGrupoComponentPorGrupo();
 	
+	
 	/**
 	 * @param metodo para registrar un componente por grupo
 	 * @return devuelve Response
 	 * @throws 
 	 */
-	public abstract Response registrarGrupoComponente(GrupoComponenteDto request);
+	public abstract Response registrarGrupoComponente(GrupoComponenteRequestDto request);
 	
 	/**
 	 * @param metodo para actualizar un componente por grupo
@@ -51,4 +60,11 @@ public interface GrupoComponenteRest {
 	 * @throws 
 	 */
 	public abstract Response eliminarGrupoComponente(RequestDeleteObjectDto request);
+	
+	/**
+	 * @param metodo para eliminar todos los componente por grupo
+	 * @return devuelve Response
+	 * @throws 
+	 */
+	public abstract Response eliminarGrupoComponenteAll();
 }

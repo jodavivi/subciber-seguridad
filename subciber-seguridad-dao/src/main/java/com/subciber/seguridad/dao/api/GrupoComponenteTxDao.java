@@ -36,10 +36,17 @@ public interface GrupoComponenteTxDao {
 	
 	
 	/**
-	 * @param metodo para actualizar el el grupo componente
+	 * @param metodo para eliminar aplicaciones del grupo
 	 * @return 
 	 * @throws DaoException
 	 */
 	public abstract AuditResponseDto eliminarGrupoComponente(RequestGenericDto<Integer> request) throws DaoException;
+	
+	/**
+	 * @param metodo para eliminar todas las aplicaciones del grupo
+	 * @return 
+	 * @throws DaoException
+	 */
+	public abstract AuditResponseDto eliminarGrupoComponenteAll(RequestGenericDto<Integer> request) throws DaoException;
 	
 }

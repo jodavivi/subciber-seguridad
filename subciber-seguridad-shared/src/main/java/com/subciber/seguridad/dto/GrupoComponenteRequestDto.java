@@ -10,33 +10,26 @@ import java.util.List;
  * @author josep
  *
  */
-public class GrupoComponenteDto implements Serializable{
+public class GrupoComponenteRequestDto implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	private Integer id;
 	private Integer grupoId;
-	private Integer componenteId;
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
+	private List<Integer> componenteId;
 	public Integer getGrupoId() {
 		return grupoId;
 	}
 	public void setGrupoId(Integer grupoId) {
 		this.grupoId = grupoId;
 	}
-	public Integer getComponenteId() {
+	public List<Integer> getComponenteId() {
 		return componenteId;
 	}
-	public void setComponenteId(Integer componenteId) {
+	public void setComponenteId(List<Integer> componenteId) {
 		this.componenteId = componenteId;
 	}
 	@Override
 	public String toString() {
-		return "GrupoComponenteDto [id=" + id + ", grupoId=" + grupoId + ", componenteId=" + componenteId + "]";
+		return "GrupoComponenteDto [grupoId=" + grupoId + ", componenteId=" + componenteId + "]";
 	}
 	
 }

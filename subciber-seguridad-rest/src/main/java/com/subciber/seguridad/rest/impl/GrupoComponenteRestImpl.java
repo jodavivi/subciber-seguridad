@@ -19,11 +19,14 @@ import javax.ws.rs.core.UriInfo;
 import com.subciber.seguridad.base.dto.AuditResponseDto;
 import com.subciber.seguridad.base.dto.RequestGenericDto;
 import com.subciber.seguridad.base.dto.ResponseGenericDto;
+import com.subciber.seguridad.business.api.GrupoComponenteFaltanteRxBusiness;
 import com.subciber.seguridad.business.api.GrupoComponenteRxBusiness;
 import com.subciber.seguridad.business.api.GrupoComponenteTxBusiness;
+import com.subciber.seguridad.business.dto.ResponseGrupoComponenteFaltanteDto;
 import com.subciber.seguridad.dao.dto.ResponseGrupoComponenteDto;
 import com.subciber.seguridad.dto.GrupoComponenteDto;
 import com.subciber.seguridad.dto.GrupoComponenteFiltroDto;
+import com.subciber.seguridad.dto.GrupoComponenteRequestDto;
 import com.subciber.seguridad.dto.RequestDeleteObjectDto;
 import com.subciber.seguridad.exception.GeneralException;
 import com.subciber.seguridad.property.MessageProvider;
@@ -50,6 +53,8 @@ public class GrupoComponenteRestImpl implements GrupoComponenteRest, Serializabl
 	private UriInfo uriInfo;
 	@Inject
 	private GrupoComponenteRxBusiness grupoComponenteRxBusiness;
+	@Inject
+	private GrupoComponenteFaltanteRxBusiness grupoComponenteFaltanteRxBusiness;
 	@Inject
 	private GrupoComponenteTxBusiness grupoComponenteTxBusiness;
 	String clase = Thread.currentThread().getStackTrace()[1].getClassName();
@@ -83,7 +88,37 @@ public class GrupoComponenteRestImpl implements GrupoComponenteRest, Serializabl
 
 		return Response.status(200).entity(response).encoding("UTF-8").build();
 	}
+	
+	@GET
+	@Path("/faltante/{grupoId}")
+	@Produces("application/json")
+	@Override
+	public Response consultarGrupoComponentFaltante() {
+		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+		ResponseGenericDto<ResponseGrupoComponenteFaltanteDto> response = null;
+		RequestGenericDto<GrupoComponenteFiltroDto> requestConsultar = null;
+		GrupoComponenteFiltroDto requestFiltro = null; 
+		try {
+			requestFiltro = new GrupoComponenteFiltroDto();
+			requestFiltro.setIdGrupo(Integer.valueOf(uriInfo.getPathParameters().getFirst("grupoId")));
+			response = new ResponseGenericDto<ResponseGrupoComponenteFaltanteDto>();
+			requestConsultar = utilitario.generateRequest(requestFiltro, httpHeaders, uriInfo);
+			response.getAuditResponse().setTransaccionId(requestConsultar.getAuditRequest().getTransaccionId());
+			ResponseGenericDto<ResponseGrupoComponenteFaltanteDto> responseConsultarGrupoComponente = grupoComponenteFaltanteRxBusiness.consultarGrupoComponenteFaltante(requestConsultar);
+			response = responseConsultarGrupoComponente;
 
+		} catch (GeneralException e) {
+			response.getAuditResponse().setCodigoRespuesta(e.getCodigo());
+			response.getAuditResponse().setMensajeRespuesta(e.getMensaje());
+		} catch (Exception e) {
+			response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoErrorIdt3);
+			response.getAuditResponse().setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt3, clase, metodo,
+					e.getStackTrace()[0].getLineNumber(), e.getMessage()));
+		}
+
+		return Response.status(200).entity(response).encoding("UTF-8").build();
+	}
+	
 	@GET
 	@Path("/{grupoId}")
 	@Produces("application/json")
@@ -118,10 +153,10 @@ public class GrupoComponenteRestImpl implements GrupoComponenteRest, Serializabl
 	@Path("/{grupoId}")
 	@Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")	
 	@Override
-	public Response registrarGrupoComponente(GrupoComponenteDto request) {
+	public Response registrarGrupoComponente(GrupoComponenteRequestDto request) {
 		 
 		ResponseGenericDto<Integer> response = null;
-		RequestGenericDto<GrupoComponenteDto> requestGrupoComponente = null;
+		RequestGenericDto<GrupoComponenteRequestDto> requestGrupoComponente = null;
 		try {
 			response = new ResponseGenericDto<Integer>(); 
 			request.setGrupoId(Integer.valueOf(uriInfo.getPathParameters().getFirst("grupoId")));
@@ -179,6 +214,35 @@ public class GrupoComponenteRestImpl implements GrupoComponenteRest, Serializabl
 			response = new AuditResponseDto(); 
 			requestCampo = utilitario.generateRequest(request, httpHeaders, uriInfo);
 			response = grupoComponenteTxBusiness.eliminarGrupoComponente(requestCampo);
+			if (response.getCodigoRespuesta() != messageProvider.codigoExito) {
+				response.setCodigoRespuesta(response.getCodigoRespuesta());
+				response.setMensajeRespuesta(response.getMensajeRespuesta());
+			}
+		} catch (GeneralException e) {
+			response.setCodigoRespuesta(e.getCodigo());
+			response.setMensajeRespuesta(e.getMensaje());
+		} catch (Exception e) {
+			response.setCodigoRespuesta(messageProvider.codigoErrorIdt3);
+			response.setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt3,
+					clase, metodo, e.getStackTrace()[0].getLineNumber(), e.getMessage()));
+		}
+
+		return Response.status(200).entity(response).build();
+	}
+
+	@DELETE
+	@Path("/{grupoId}")
+	@Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")	
+	@Override
+	public Response eliminarGrupoComponenteAll() {
+		 
+		AuditResponseDto response = null;
+		RequestGenericDto<Integer> requestCampo = null;
+		try {
+			response = new AuditResponseDto(); 
+			Integer grupoId = Integer.valueOf(uriInfo.getPathParameters().getFirst("grupoId"));
+			requestCampo = utilitario.generateRequest(grupoId, httpHeaders, uriInfo);
+			response = grupoComponenteTxBusiness.eliminarGrupoComponenteAll(requestCampo);
 			if (response.getCodigoRespuesta() != messageProvider.codigoExito) {
 				response.setCodigoRespuesta(response.getCodigoRespuesta());
 				response.setMensajeRespuesta(response.getMensajeRespuesta());

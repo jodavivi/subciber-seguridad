@@ -23,7 +23,7 @@ public class TestUtil {
 		
 		final String secretKey = "Peru12345678.";
 		LocalDateTime actuals = LocalDateTime.now();
-	    String originalString = "R|1|"+actuals.toString();
+	    String originalString = "Peru123456.";
 	    String encryptedString = EncriptacionAES.encrypt(originalString, secretKey) ;
 	    String decryptedString = EncriptacionAES.decrypt(encryptedString, secretKey) ;
 	     

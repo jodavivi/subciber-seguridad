@@ -7,6 +7,7 @@ import com.subciber.seguridad.base.dto.AuditResponseDto;
 import com.subciber.seguridad.base.dto.RequestGenericDto;
 import com.subciber.seguridad.base.dto.ResponseGenericDto;
 import com.subciber.seguridad.dto.GrupoComponenteDto;
+import com.subciber.seguridad.dto.GrupoComponenteRequestDto;
 import com.subciber.seguridad.dto.RequestDeleteObjectDto;
 import com.subciber.seguridad.exception.BusinessException;
 
@@ -23,7 +24,7 @@ public interface GrupoComponenteTxBusiness {
 	 * @return devuelve el Id del registro
 	 * @throws BusinessException
 	 */
-	public abstract ResponseGenericDto<Integer> registrarGrupoComponente(RequestGenericDto<GrupoComponenteDto> request) throws BusinessException;
+	public abstract ResponseGenericDto<Integer> registrarGrupoComponente(RequestGenericDto<GrupoComponenteRequestDto> request) throws BusinessException;
 
 	/**
 	 * @param metodo para actualizar el campo de la tabla generica
@@ -38,5 +39,12 @@ public interface GrupoComponenteTxBusiness {
 	 * @throws BusinessException
 	 */
 	public abstract AuditResponseDto eliminarGrupoComponente(RequestGenericDto<RequestDeleteObjectDto> request) throws BusinessException;
-	
+
+	/**
+	 * @param metodo para eliminar los items del grupo
+	 * @return devuelve el objeto de Auditoria
+	 * @throws BusinessException
+	 */
+	public abstract AuditResponseDto eliminarGrupoComponenteAll(RequestGenericDto<Integer> request) throws BusinessException;
+
 }
