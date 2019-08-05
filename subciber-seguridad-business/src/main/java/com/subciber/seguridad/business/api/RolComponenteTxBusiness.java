@@ -8,6 +8,7 @@ import com.subciber.seguridad.base.dto.RequestGenericDto;
 import com.subciber.seguridad.base.dto.ResponseGenericDto;
 import com.subciber.seguridad.dto.RequestDeleteObjectDto;
 import com.subciber.seguridad.dto.RolComponenteDto;
+import com.subciber.seguridad.dto.RolComponenteRequestDto;
 import com.subciber.seguridad.exception.BusinessException;
 
 /**
@@ -23,7 +24,7 @@ public interface RolComponenteTxBusiness {
 	 * @return devuelve el Id del registro
 	 * @throws BusinessException
 	 */
-	public abstract ResponseGenericDto<Integer> registrarRolComponente(RequestGenericDto<RolComponenteDto> request) throws BusinessException;
+	public abstract ResponseGenericDto<Integer> registrarRolComponente(RequestGenericDto<RolComponenteRequestDto> request) throws BusinessException;
 
 	/**
 	 * @param metodo para actualizar el campo de la tabla generica
@@ -39,4 +40,10 @@ public interface RolComponenteTxBusiness {
 	 */
 	public abstract AuditResponseDto eliminarRolComponente(RequestGenericDto<RequestDeleteObjectDto> request) throws BusinessException;
 	
+	/**
+	 * @param metodo para eliminar los items del rol
+	 * @return devuelve el objeto de Auditoria
+	 * @throws BusinessException
+	 */
+	public abstract AuditResponseDto eliminarRolComponenteAll(RequestGenericDto<Integer> request) throws BusinessException;
 }

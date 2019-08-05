@@ -42,4 +42,11 @@ public interface RolComponenteTxDao {
 	 */
 	public abstract AuditResponseDto eliminarRolComponente(RequestGenericDto<Integer> request) throws DaoException;
 	
+	/**
+	 * @param metodo para eliminar todas las aplicaciones del rol
+	 * @return 
+	 * @throws DaoException
+	 */
+	public abstract AuditResponseDto eliminarRolComponenteAll(RequestGenericDto<Integer> request) throws DaoException;
+	
 }

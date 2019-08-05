@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 
 import com.subciber.seguridad.base.dto.AuditResponseDto;
 import com.subciber.seguridad.base.dto.RequestGenericDto;
@@ -143,6 +144,62 @@ public class RolComponenteTxDaoImpl extends BaseJPADao<RolComponente>  implement
 			
 			entityManager.persist(campo);
 			entityManager.flush();
+			response.setCodigoRespuesta(messageProvider.codigoExito);
+			response.setMensajeRespuesta(messageProvider.mensajeExito);
+			
+		}catch(PersistenceException e) {
+			  Throwable th = e.getCause();
+				  if(th.getCause() instanceof SQLException) {
+					  SQLException cause = (SQLException) th.getCause();
+					  response.setCodigoRespuesta(messageProvider.codigoErrorIdt1);
+					  response.setMensajeRespuesta( MessageFormat.format(messageProvider.mensajeErrorIdt1, clase, metodo, e.getStackTrace()[0].getLineNumber(), tableName, cause.getMessage()));
+				  	}
+			 
+		}catch(Exception e) {
+			response.setCodigoRespuesta(messageProvider.codigoErrorIdt1);
+			response.setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt1, clase, metodo, e.getStackTrace()[0].getLineNumber(), tableName, e.getMessage()));
+		}
+		return response; 
+	}
+
+	@Override
+	public AuditResponseDto eliminarRolComponenteAll(RequestGenericDto<Integer> request) throws DaoException {
+		 
+		metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+		AuditResponseDto response = null;	
+		StringBuilder jpql 			= null;
+		StringBuilder jpqlSelect 	= null;
+		StringBuilder jpqlWhere  	= null;
+		try {
+			response = new AuditResponseDto();
+			jpqlSelect = new StringBuilder();
+			jpqlSelect.append("UPDATE ");
+			jpqlSelect.append(entityClass.getSimpleName());
+			jpqlSelect.append(" SET ");
+			jpqlSelect.append("fechaModificacion 	= :fechaModificacion, ");
+			jpqlSelect.append("terminalModificador 	= :terminalModificador, ");
+			jpqlSelect.append("usuarioModificador 	= :usuarioModificador, ");
+			jpqlSelect.append("estadoId 			= :estadoId ");
+			
+			jpqlWhere = new StringBuilder();
+			jpqlWhere.append("WHERE ");
+			jpqlWhere.append("rolId 		= :rolId ");
+			jpqlWhere.append("and ");
+			jpqlWhere.append("estadoId 		<> :estadoEliminadoId ");
+			
+			jpql = new StringBuilder();
+			jpql.append(jpqlSelect);
+			jpql.append(jpqlWhere);
+			
+			Query query = entityManager.createQuery(jpql.toString());
+			query.setParameter("fechaModificacion", LocalDateTime.now());
+			query.setParameter("terminalModificador", request.getAuditRequest().getTerminal());
+			query.setParameter("usuarioModificador", request.getAuditRequest().getUsuario());
+			query.setParameter("estadoId", ConstantesConfig.eliminado);
+			query.setParameter("rolId", request.getObjectRequest());
+			query.setParameter("estadoEliminadoId", ConstantesConfig.eliminado);
+			
+			query.executeUpdate();
 			response.setCodigoRespuesta(messageProvider.codigoExito);
 			response.setMensajeRespuesta(messageProvider.mensajeExito);
 			

@@ -7,6 +7,7 @@ import javax.ws.rs.core.Response;
 
 import com.subciber.seguridad.dto.RequestDeleteObjectDto;
 import com.subciber.seguridad.dto.RolComponenteDto;
+import com.subciber.seguridad.dto.RolComponenteRequestDto;
 
 /**
  * @description Interface para el mantenimiento de componentes por rol
@@ -31,11 +32,18 @@ public interface RolComponenteRest {
 	public abstract Response consultarRolComponentePorRol();
 	
 	/**
+	 * @param metodo para consultar los  componentes faltantes por rol
+	 * @return devuelve informacion de los componentes faltantes
+	 * @throws 
+	 */
+	public abstract Response consultarRolComponentFaltante();
+	
+	/**
 	 * @param metodo para registrar un componente por rol
 	 * @return devuelve Response
 	 * @throws 
 	 */
-	public abstract Response registrarRolComponente(RolComponenteDto request);
+	public abstract Response registrarRolComponente(RolComponenteRequestDto request);
 	
 	/**
 	 * @param metodo para actualizar un componente por rol
@@ -51,4 +59,11 @@ public interface RolComponenteRest {
 	 * @throws 
 	 */
 	public abstract Response eliminarRolComponente(RequestDeleteObjectDto request);
+	
+	/**
+	 * @param metodo para eliminar todos los componente por rol
+	 * @return devuelve Response
+	 * @throws 
+	 */
+	public abstract Response eliminarRolComponenteAll();
 }

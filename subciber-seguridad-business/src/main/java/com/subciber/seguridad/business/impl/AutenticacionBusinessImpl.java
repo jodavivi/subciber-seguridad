@@ -191,7 +191,7 @@ public class AutenticacionBusinessImpl implements AutenticacionBusiness, Seriali
 				grupoNuevo.setCodigoGrupo(grupo.getGrupoId());
 				grupoNuevo.setNombreGrupo(grupo.getGrupo());
 				for(VAccesoGrupoAplicacion aplicacion : listGrupoAplicaciones) {
-					if(aplicacion.getGrupoId() == grupo.getGrupoId()) {
+					if(Integer.valueOf(aplicacion.getGrupoId()) - Integer.valueOf(grupo.getGrupoId()) == 0) {
 						UsuarioAplicacionDto app = new UsuarioAplicacionDto();
 						app.setAplicacionId(aplicacion.getComponenteId());
 						app.setNombre(aplicacion.getNombre());

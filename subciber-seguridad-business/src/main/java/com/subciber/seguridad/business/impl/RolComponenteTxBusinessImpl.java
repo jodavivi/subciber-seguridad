@@ -20,6 +20,7 @@ import com.subciber.seguridad.business.api.RolComponenteTxBusiness;
 import com.subciber.seguridad.dao.api.RolComponenteTxDao;
 import com.subciber.seguridad.dto.RequestDeleteObjectDto;
 import com.subciber.seguridad.dto.RolComponenteDto;
+import com.subciber.seguridad.dto.RolComponenteRequestDto;
 import com.subciber.seguridad.exception.BusinessException;
 import com.subciber.seguridad.exception.DaoException;
 import com.subciber.seguridad.property.MessageProvider;
@@ -47,7 +48,7 @@ public class RolComponenteTxBusinessImpl implements RolComponenteTxBusiness , Se
 	private RolComponenteTxDao rolComponenteTxDao;
 	
 	@Override
-	public ResponseGenericDto<Integer> registrarRolComponente(RequestGenericDto<RolComponenteDto> request)
+	public ResponseGenericDto<Integer> registrarRolComponente(RequestGenericDto<RolComponenteRequestDto> request)
 			throws BusinessException {
 		ResponseGenericDto<Integer> response = null;
 
@@ -59,11 +60,23 @@ public class RolComponenteTxBusinessImpl implements RolComponenteTxBusiness , Se
 			logger.info(MessageFormat.format(messageProvider.logMensajeInp, transactionId, metodo, JAXBUtil.log(request)));
 			response = new ResponseGenericDto<>();
 			response.getAuditResponse().setTransaccionId(transactionId);		
-			ResponseGenericDto<Integer>  registrarRolComponenteResponse = rolComponenteTxDao.registrarRolComponente(request);
 			
-			if(registrarRolComponenteResponse.getAuditResponse().getCodigoRespuesta() != messageProvider.codigoExito) {
-				throw new DaoException(registrarRolComponenteResponse.getAuditResponse().getCodigoRespuesta(), registrarRolComponenteResponse.getAuditResponse().getMensajeRespuesta());
+			
+			for(Integer item : request.getObjectRequest().getComponenteId()) {
+				
+				RequestGenericDto<RolComponenteDto> componenteDto = new RequestGenericDto<RolComponenteDto>();
+				componenteDto.setAuditRequest(request.getAuditRequest());
+				RolComponenteDto itemDto = new RolComponenteDto();
+				itemDto.setComponenteId(item);
+				itemDto.setRolId(request.getObjectRequest().getRolId());
+				componenteDto.setObjectRequest(itemDto);
+				ResponseGenericDto<Integer>  registrarGrupoComponenteResponse = rolComponenteTxDao.registrarRolComponente(componenteDto);
+				
+				if(registrarGrupoComponenteResponse.getAuditResponse().getCodigoRespuesta() != messageProvider.codigoExito) {
+					throw new DaoException(registrarGrupoComponenteResponse.getAuditResponse().getCodigoRespuesta(), registrarGrupoComponenteResponse.getAuditResponse().getMensajeRespuesta());
+				}
 			}
+			
 			response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoExito);
 			response.getAuditResponse().setMensajeRespuesta(messageProvider.mensajeExito);
 		}catch (DaoException e) {
@@ -141,6 +154,43 @@ public class RolComponenteTxBusinessImpl implements RolComponenteTxBusiness , Se
 				if(eliminareliminarRolComponente.getCodigoRespuesta() != messageProvider.codigoExito) {
 					throw new DaoException(eliminareliminarRolComponente.getCodigoRespuesta(), eliminareliminarRolComponente.getMensajeRespuesta());
 				}
+			}
+			response.setCodigoRespuesta(messageProvider.codigoExito);
+			response.setMensajeRespuesta(messageProvider.mensajeExito);
+		}catch (DaoException e) {
+			logger.error(MessageFormat.format(messageProvider.logMensajeError, transactionId, metodo, e.getMessage()));
+			response.setCodigoRespuesta(e.getCodigo());
+			response.setMensajeRespuesta(e.getMensaje());
+		} catch (Exception e) {
+			logger.error(MessageFormat.format(messageProvider.logMensajeError, transactionId, metodo, e.getMessage()));
+			response.setCodigoRespuesta(messageProvider.codigoErrorIdt2);
+			response.setMensajeRespuesta(MessageFormat.format(messageProvider.mensajeErrorIdt2, clase, metodo, e.getStackTrace()[0].getLineNumber(),  e.getMessage()));		
+		} finally { 
+			logger.info(MessageFormat.format(messageProvider.logMensajeOut, transactionId, metodo, JAXBUtil.log(response)));
+			logger.info(MessageFormat.format(messageProvider.logMensajeTime, transactionId,	metodo, (System.currentTimeMillis() - timeStart)));
+			logger.info(MessageFormat.format(messageProvider.logMensajeEnd, transactionId, metodo));
+		}
+		
+		return response;
+	} 
+	
+	@Override
+	public AuditResponseDto eliminarRolComponenteAll(RequestGenericDto<Integer> request) throws BusinessException {
+		
+		AuditResponseDto response = null;
+
+		try {
+			timeStart = System.currentTimeMillis();
+			transactionId = request.getAuditRequest().getTransaccionId();
+			metodo = Thread.currentThread().getStackTrace()[1].getMethodName();
+			logger.info(MessageFormat.format(messageProvider.logMensajeInicio, transactionId, metodo));
+			logger.info(MessageFormat.format(messageProvider.logMensajeInp, transactionId, metodo, JAXBUtil.log(request)));
+			response = new AuditResponseDto();
+			response.setTransaccionId(transactionId);		
+			AuditResponseDto  actualizarRolComponenteResponse = rolComponenteTxDao.eliminarRolComponenteAll(request);
+			
+			if(actualizarRolComponenteResponse.getCodigoRespuesta() != messageProvider.codigoExito) {
+				throw new DaoException(actualizarRolComponenteResponse.getCodigoRespuesta(), actualizarRolComponenteResponse.getMensajeRespuesta());
 			}
 			response.setCodigoRespuesta(messageProvider.codigoExito);
 			response.setMensajeRespuesta(messageProvider.mensajeExito);
