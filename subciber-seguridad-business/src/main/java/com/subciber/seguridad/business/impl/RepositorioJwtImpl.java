@@ -141,7 +141,7 @@ public class RepositorioJwtImpl implements RepositorioJwt, Serializable {
 			String datosToken 						= encriptacionAES.decrypt(datosUsuario, ConstantesConfig.claveEncripacionAES);
 			String[] datos 							= datosToken.split(";");
 			
-			if(datos[1] != "BATCH") {
+			if(!datos[1].equalsIgnoreCase("BATCH")) {
 			
 				String fechaCreacion					= datos[3];
 				String fechaExpiracion					= datos[4];
