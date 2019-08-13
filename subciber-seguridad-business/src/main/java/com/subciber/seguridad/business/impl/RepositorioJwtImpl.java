@@ -197,6 +197,21 @@ public class RepositorioJwtImpl implements RepositorioJwt, Serializable {
 				estructura.setUsuarioId(Integer.parseInt(usuarioId));
 				estructura.setRol(rol);
 				response.setObjectResponse(estructura);
+			}else {
+				String nuevoToken  = generarToken(session, 20000, "BATCH", "vivfcons@gmail.com", "", "");
+				
+				EstructuraTokensDto estructura = new EstructuraTokensDto();
+				estructura.setCodigodeaccesos("");
+				estructura.setEmail("vivfcons@gmail.com");
+				estructura.setFechaCreacion("");
+				estructura.setFechaExpiracion("");
+				estructura.setSession(session);
+				estructura.setTokens(tokens.getObjectRequest().getTokens());
+				estructura.setNuevoTokens(nuevoToken);
+				estructura.setUsuario("BATCH");
+				estructura.setUsuarioId(20000);
+				estructura.setRol("");
+				response.setObjectResponse(estructura);
 			}
 			response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoExito);
 			response.getAuditResponse().setMensajeRespuesta(messageProvider.mensajeExito);
