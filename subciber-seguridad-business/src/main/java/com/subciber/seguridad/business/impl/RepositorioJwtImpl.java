@@ -140,61 +140,64 @@ public class RepositorioJwtImpl implements RepositorioJwt, Serializable {
 			String datosUsuario 					= parts[1]; // datos de expiracion y datos de usuario
 			String datosToken 						= encriptacionAES.decrypt(datosUsuario, ConstantesConfig.claveEncripacionAES);
 			String[] datos 							= datosToken.split(";");
-			String fechaCreacion					= datos[3];
-			String fechaExpiracion					= datos[4];
-			LocalDateTime fechaActual 				= LocalDateTime.now();
-			LocalDateTime fechaSessionExpiracion 	= LocalDateTime.parse(datos[4]);
-			String usuarioId 						= datos[0];
-			String usuario	 						= datos[1];
-			String email 							= datos[2];
-			String codigodeaccesos					= "";
-			String rol								= "";
-			try {
-				codigodeaccesos 					= datos[5];
-			}catch(Exception e){
-				codigodeaccesos						= "";
+			
+			if(datos[1] != "BATCH") {
+			
+				String fechaCreacion					= datos[3];
+				String fechaExpiracion					= datos[4];
+				LocalDateTime fechaActual 				= LocalDateTime.now();
+				LocalDateTime fechaSessionExpiracion 	= LocalDateTime.parse(datos[4]);
+				String usuarioId 						= datos[0];
+				String usuario	 						= datos[1];
+				String email 							= datos[2];
+				String codigodeaccesos					= "";
+				String rol								= "";
+				try {
+					codigodeaccesos 					= datos[5];
+				}catch(Exception e){
+					codigodeaccesos						= "";
+				}
+				try {
+					rol									= datos[6];
+				}catch(Exception e){
+					rol									= "";
+				}
+				// 2. validamos si el token se encuentra vencido o falta configuración de
+				// accesos
+				if (fechaActual.compareTo(fechaSessionExpiracion) > 0) {
+					throw new BusinessException(messageProvider.codigoErrorIdf5,
+							MessageFormat.format(messageProvider.mensajeErrorIdf5, "Token Vencido"));
+				}
+	//			try {
+	//				String acceso = datos[5];
+	//				if (utilitario.isNullOrEmpty(acceso)) {
+	//					throw new BusinessException(messageProvider.codigoErrorIdf5,
+	//							MessageFormat.format(messageProvider.mensajeErrorIdf5, "Accesos no configurados"));
+	//				}
+	//			} catch (Exception e) {
+	//				throw new BusinessException(messageProvider.codigoErrorIdf5,
+	//						MessageFormat.format(messageProvider.mensajeErrorIdf5, "Accesos no configurados"));
+	//			}
+				
+				//3. Validamos que la session aun siga activa
+				recuperarUsuario(session);
+				
+				//4. Generamos el nuevo tokens 
+				String nuevoToken  = generarToken(session, Integer.parseInt(usuarioId), usuario, email, codigodeaccesos, rol);
+				
+				EstructuraTokensDto estructura = new EstructuraTokensDto();
+				estructura.setCodigodeaccesos(codigodeaccesos);
+				estructura.setEmail(email);
+				estructura.setFechaCreacion(fechaCreacion);
+				estructura.setFechaExpiracion(fechaExpiracion);
+				estructura.setSession(session);
+				estructura.setTokens(tokens.getObjectRequest().getTokens());
+				estructura.setNuevoTokens(nuevoToken);
+				estructura.setUsuario(usuario);
+				estructura.setUsuarioId(Integer.parseInt(usuarioId));
+				estructura.setRol(rol);
+				response.setObjectResponse(estructura);
 			}
-			try {
-				rol									= datos[6];
-			}catch(Exception e){
-				rol									= "";
-			}
-			// 2. validamos si el token se encuentra vencido o falta configuración de
-			// accesos
-			if (fechaActual.compareTo(fechaSessionExpiracion) > 0) {
-				throw new BusinessException(messageProvider.codigoErrorIdf5,
-						MessageFormat.format(messageProvider.mensajeErrorIdf5, "Token Vencido"));
-			}
-//			try {
-//				String acceso = datos[5];
-//				if (utilitario.isNullOrEmpty(acceso)) {
-//					throw new BusinessException(messageProvider.codigoErrorIdf5,
-//							MessageFormat.format(messageProvider.mensajeErrorIdf5, "Accesos no configurados"));
-//				}
-//			} catch (Exception e) {
-//				throw new BusinessException(messageProvider.codigoErrorIdf5,
-//						MessageFormat.format(messageProvider.mensajeErrorIdf5, "Accesos no configurados"));
-//			}
-			
-			//3. Validamos que la session aun siga activa
-			recuperarUsuario(session);
-			
-			//4. Generamos el nuevo tokens 
-			String nuevoToken  = generarToken(session, Integer.parseInt(usuarioId), usuario, email, codigodeaccesos, rol);
-			
-			EstructuraTokensDto estructura = new EstructuraTokensDto();
-			estructura.setCodigodeaccesos(codigodeaccesos);
-			estructura.setEmail(email);
-			estructura.setFechaCreacion(fechaCreacion);
-			estructura.setFechaExpiracion(fechaExpiracion);
-			estructura.setSession(session);
-			estructura.setTokens(tokens.getObjectRequest().getTokens());
-			estructura.setNuevoTokens(nuevoToken);
-			estructura.setUsuario(usuario);
-			estructura.setUsuarioId(Integer.parseInt(usuarioId));
-			estructura.setRol(rol);
-			
-			response.setObjectResponse(estructura);
 			response.getAuditResponse().setCodigoRespuesta(messageProvider.codigoExito);
 			response.getAuditResponse().setMensajeRespuesta(messageProvider.mensajeExito);
 		} catch (BusinessException e) {

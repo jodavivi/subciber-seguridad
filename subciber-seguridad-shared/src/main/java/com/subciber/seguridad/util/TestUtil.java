@@ -21,18 +21,9 @@ public class TestUtil {
 	 */
 	public static void main(String[] args) {
 		
-		final String secretKey = "Peru12345678.";
-		LocalDateTime actuals = LocalDateTime.now();
-	    String originalString = "Peru123456.";
-	    String encryptedString = EncriptacionAES.encrypt(originalString, secretKey) ;
-	    String decryptedString = EncriptacionAES.decrypt(encryptedString, secretKey) ;
-	     
-	    System.out.println(originalString);
-	    System.out.println(encryptedString);
-	    System.out.println(decryptedString);
+		final String secretKey = "Peru12345678."; 
 	    
-	    String demo = "R|53|2019-05-11T05:12:47.297272";
-	    String[] campos = demo.split("\\|");
+	    String demo = "2000;BATCH;BATCH-VALIDACOMPRASINICIALES;vivfcons@gmail.com"; 
 	    System.out.println(EncriptacionAES.encrypt(demo, secretKey));
 //	    LocalDateTime actual = LocalDateTime.now();
 //	    LocalDateTime actualSuma = actual.plusMinutes(15);
@@ -74,15 +65,7 @@ public class TestUtil {
 //        String saltStr = salt.toString();
 //        
 //        
-//        System.out.println(saltStr);
-	    
-	    Map<Integer, String> logueadaos = new HashMap<Integer, String>();
-	    
-	    LocalDateTime actual = LocalDateTime.now();
-		LocalDateTime actualSuma = actual.plusMinutes(ConstantesConfig.timeoutSession);
-		System.out.println(actual.toString());
-		System.out.println(actualSuma.toString());
-	    
+//        System.out.println(saltStr); 
 	}
 
 }
